@@ -10,11 +10,56 @@
     <style>
         .auth-container {
             max-width: 400px;
-            margin: 4rem auto;
+            margin: 2rem auto;
             background-color: var(--bg-card);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 2rem;
+        }
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu, .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a, .topnav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-link:hover {
+            color: var(--accent-amber);
+        }
+        .topnav-auth-action {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
         }
         .auth-tabs {
             display: flex;
@@ -79,9 +124,40 @@
             color: var(--success-color);
             border: 1px solid var(--success-color);
         }
+        @media (max-width: 720px) {
+            .topnav {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .topnav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: space-between;
+                gap: 0.75rem;
+            }
+            .topnav-actions {
+                gap: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">
+            PraxisTrack <span>v2.4</span>
+        </a>
+        <nav class="topnav-menu" aria-label="Navegación principal">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="bitacora.html">Mi Bitácora</a>
+            <a href="postulaciones.html">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <a href="perfil.html" class="topnav-link">Mi Perfil</a>
+            <a href="#form-login" id="auth-btn-action" class="btn-primary topnav-auth-action">Iniciar sesión</a>
+        </div>
+    </header>
 
     <div class="container">
         <div class="auth-container">
@@ -173,6 +249,37 @@
             box.style.display = 'none';
         }
 
+        async function initializeAuthNav() {
+            const authAction = document.getElementById('auth-btn-action');
+            const { data, error } = await supabaseClient.auth.getSession();
+
+            if (error) {
+                showAlert(`No se pudo comprobar la sesión: ${error.message}`);
+                return;
+            }
+
+            if (data.session) {
+                authAction.textContent = 'Cerrar sesión';
+                authAction.href = '#';
+                authAction.onclick = async event => {
+                    event.preventDefault();
+                    const { error: signOutError } = await supabaseClient.auth.signOut();
+                    if (signOutError) {
+                        showAlert(`No se pudo cerrar la sesión: ${signOutError.message}`);
+                        return;
+                    }
+                    window.location.reload();
+                };
+                return;
+            }
+
+            authAction.onclick = event => {
+                event.preventDefault();
+                switchTab('login');
+                document.getElementById('form-login').scrollIntoView({ behavior: 'smooth' });
+            };
+        }
+
         async function handleLogin(e) {
             e.preventDefault();
             hideAlert();
@@ -222,6 +329,8 @@
                 switchTab('login');
             }, 2000);
         }
+
+        initializeAuthNav();
     </script>
 </body>
 </html>
