@@ -107,6 +107,22 @@
             margin-top: 1rem;
             padding: 0.75rem;
         }
+        .terms-consent {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-top: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        .terms-consent input {
+            margin-top: 0.2rem;
+            accent-color: var(--accent-amber);
+        }
+        .terms-consent a {
+            color: var(--accent-amber);
+        }
         .alert {
             padding: 0.75rem;
             border-radius: 6px;
@@ -201,13 +217,17 @@
                     <label for="reg-password">Contraseña</label>
                     <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres">
                 </div>
+                <div class="terms-consent">
+                    <input type="checkbox" id="reg-terms" required>
+                    <label for="reg-terms">He leído y acepto los <a href="terminos.html" target="_blank" rel="noopener noreferrer">Términos y Condiciones y la Política de Privacidad</a>.</label>
+                </div>
                 <button type="submit" class="btn-primary auth-btn">Crear Cuenta de Estudiante</button>
             </form>
         </div>
     </div>
 
     <footer>
-        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+        <p><a href="terminos.html">Centro de condiciones y privacidad de PraxisTrack</a></p>
     </footer>
 
     <!-- Scripts de inicialización -->
@@ -302,6 +322,10 @@
         async function handleRegister(e) {
             e.preventDefault();
             hideAlert();
+            if (!document.getElementById('reg-terms').checked) {
+                showAlert('Debes aceptar los términos y condiciones para crear tu cuenta.');
+                return;
+            }
             const nombre = document.getElementById('reg-nombre').value;
             const cedula = document.getElementById('reg-cedula').value;
             const email = document.getElementById('reg-email').value;

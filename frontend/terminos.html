@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y privacidad | PraxisTrack</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu, .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a, .topnav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-menu a.active, .topnav-link:hover {
+            color: var(--accent-amber);
+        }
+        .topnav-auth-action {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+        .terms-container {
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .terms-header, .terms-section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .terms-header h1, .terms-section h2 {
+            margin-bottom: 0.5rem;
+        }
+        .terms-section h3 {
+            color: var(--accent-amber);
+            margin: 1.25rem 0 0.5rem;
+            font-size: 1rem;
+        }
+        .terms-section p, .terms-section li {
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        .terms-section ul {
+            padding-left: 1.5rem;
+        }
+        .terms-section a {
+            color: var(--accent-amber);
+        }
+        .terms-updated {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        @media (max-width: 720px) {
+            .topnav {
+                padding: 0.75rem 1rem;
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+            .topnav-menu {
+                order: 3;
+                width: 100%;
+                justify-content: space-between;
+                gap: 0.75rem;
+            }
+            .topnav-actions {
+                gap: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">PraxisTrack <span>v2.4</span></a>
+        <nav class="topnav-menu" aria-label="Navegación principal">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="bitacora.html">Mi Bitácora</a>
+            <a href="postulaciones.html">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <a href="perfil.html" class="topnav-link">Mi Perfil</a>
+            <a href="auth.html" class="btn-primary topnav-auth-action">Iniciar sesión</a>
+        </div>
+    </header>
+
+    <main class="container terms-container">
+        <header class="terms-header">
+            <h1>Términos, privacidad y políticas</h1>
+            <p class="terms-updated">Condiciones de uso de PraxisTrack</p>
+        </header>
+
+        <section class="terms-section">
+            <h2>1. Términos y Condiciones de Uso</h2>
+            <p class="terms-updated">Última actualización: 29 de octubre de 2026</p>
+            <p>Bienvenido/a a Praxistrack. Al registrarte, acceder o utilizar nuestra plataforma de bitácora y gestión de pasantías, aceptas cumplir y quedar vinculado/a por los presentes Términos y Condiciones.</p>
+            <h3>1. Descripción del Servicio</h3>
+            <p>Praxistrack es una plataforma web y móvil diseñada para facilitar la búsqueda, postulación y gestión de pasantías para estudiantes, permitiendo la interacción con empresas oferentes de cupos formativos y el registro de horas de pasantía.</p>
+            <h3>2. Registro de Cuentas y Responsabilidad</h3>
+            <p><strong>Estudiantes y Empresas:</strong> Debes proporcionar información veraz, actualizada y completa al momento de crear tu cuenta.</p>
+            <p><strong>Seguridad de la Cuenta:</strong> Eres responsable de mantener la confidencialidad de tus credenciales de acceso. Cualquier actividad realizada desde tu cuenta será tu responsabilidad.</p>
+            <h3>3. Uso Aceptable</h3>
+            <p>Queda estrictamente prohibido:</p>
+            <ul>
+                <li>Proporcionar datos falsos en perfiles académicos, ofertas laborales o registros de horas.</li>
+                <li>Intentar vulnerar la seguridad, la infraestructura o las APIs de la plataforma.</li>
+                <li>Utilizar la plataforma para fines ilícitos o Spam.</li>
+            </ul>
+            <h3>4. Limitación de Responsabilidad</h3>
+            <p>Praxistrack actúa como un canal de intermediación entre estudiantes y empresas. No garantizamos la contratación efectiva de pasantes ni nos hacemos responsables por los acuerdos privados pactados fuera de la plataforma entre las partes.</p>
+            <h3>5. Soporte y Contacto</h3>
+            <p>Para resolver cualquier duda o consulta sobre estos términos, contáctanos a través de nuestro correo de soporte técnico:</p>
+            <p><a href="mailto:soporte@praxistrack.com">soporte@praxistrack.com</a></p>
+        </section>
+
+        <section class="terms-section">
+            <h2>2. Política de Privacidad</h2>
+            <p class="terms-updated">Última actualización: 29 de octubre de 2026</p>
+            <p>En Praxistrack, la privacidad de nuestros estudiantes y empresas aliadas es una prioridad. Esta política detalla qué datos recopilamos y cómo los tratamos.</p>
+            <h3>1. Información que Recopilamos</h3>
+            <p><strong>Datos de Identificación y Contacto:</strong> Nombre, apellido, correo electrónico, teléfono y fotografía de perfil.</p>
+            <p><strong>Datos Académicos y Profesionales:</strong> Curriculum vitae, habilidades, postulaciones e historial/registro de horas de pasantía.</p>
+            <p><strong>Datos Técnicos y de Navegación:</strong> Identificadores técnicos de sesión, dirección IP y metadatos del navegador.</p>
+            <h3>2. Uso de la Información</h3>
+            <p>La información recopilada se utiliza exclusivamente para:</p>
+            <ul>
+                <li>Conectar a estudiantes con ofertas de pasantía publicadas por empresas.</li>
+                <li>Validar y auditar los esquemas de datos y registros de horas cargados en la plataforma.</li>
+                <li>Proteger la seguridad de las cuentas mediante mecanismos de autenticación y validación de entrada (Zod).</li>
+            </ul>
+            <h3>3. Almacenamiento y Protección de Datos</h3>
+            <p>Tus datos son almacenados en infraestructura de bases de datos segura (PostgreSQL / Supabase) con comunicaciones encriptadas en tránsito (HTTPS) y filtros de seguridad en el backend. No vendemos ni comerciamos con tu información personal a terceros.</p>
+            <h3>4. Soporte y Ejercicio de Derechos</h3>
+            <p>Si deseas consultar qué datos guardamos sobre ti o solicitar ajustes en tu perfil, escríbenos a nuestro correo de soporte:</p>
+            <p><a href="mailto:soporte@praxistrack.com">soporte@praxistrack.com</a></p>
+        </section>
+
+        <section class="terms-section">
+            <h2>3. Política de Cookies</h2>
+            <p class="terms-updated">Última actualización: 29 de octubre de 2026</p>
+            <p>Praxistrack utiliza cookies y tecnologías de almacenamiento local para garantizar el correcto funcionamiento del sistema.</p>
+            <h3>1. ¿Qué son las cookies?</h3>
+            <p>Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo para recordar tus preferencias, mantener la sesión activa y ofrecer una experiencia fluida.</p>
+            <h3>2. Tipos de Cookies que Utiliza Praxistrack</h3>
+            <p><strong>Cookies Estrictamente Necesarias:</strong> Esenciales para el inicio de sesión, la autenticación de usuarios y la seguridad de las peticiones mediante tokens JWT u origen seguro (CORS). Sin estas cookies, la aplicación no puede funcionar.</p>
+            <p><strong>Cookies de Rendimiento y Preferencias:</strong> Permiten recordar tus ajustes dentro del sistema (como preferencias de tema o filtros de búsqueda de pasantías).</p>
+            <h3>3. Gestión y Desactivación de Cookies</h3>
+            <p>Puedes configurar o bloquear el uso de cookies desde los ajustes de tu navegador. Sin embargo, ten en cuenta que deshabilitar cookies esenciales puede impedir el inicio de sesión en Praxistrack.</p>
+            <h3>4. Soporte y Consultas</h3>
+            <p>Para cualquier inquietud sobre la gestión de cookies y tecnologías de almacenamiento, puedes escribirnos a nuestro correo de soporte:</p>
+            <p><a href="mailto:soporte@praxistrack.com">soporte@praxistrack.com</a></p>
+        </section>
+
+        <section class="terms-section">
+            <h2>4. Política de Borrado y Eliminación de Datos</h2>
+            <p class="terms-updated">Última actualización: 29 de octubre de 2026</p>
+            <p>En Praxistrack garantizamos el derecho de los usuarios a solicitar la eliminación definitiva de su cuenta y de toda la información personal almacenada en nuestras bases de datos.</p>
+            <h3>1. Alcance del Borrado de Datos</h3>
+            <p>La eliminación de una cuenta implica la supresión completa e irreversible de:</p>
+            <ul>
+                <li>Perfil de usuario (datos personales y credenciales).</li>
+                <li>Historial de postulaciones a ofertas de pasantías.</li>
+                <li>Registros y bitácoras de horas ingresadas.</li>
+                <li>Archivos cargados (CVs, certificaciones).</li>
+            </ul>
+            <h3>2. Cómo Solicitar el Borrado de Datos</h3>
+            <p>Puedes solicitar la eliminación de tu cuenta y datos asociados de dos maneras:</p>
+            <p><strong>Desde la Aplicación:</strong> Accediendo a Ajustes de Cuenta &gt; Configuración de Privacidad &gt; Eliminar Cuenta.</p>
+            <p><strong>Vía Correo Electrónico:</strong> Enviando una solicitud formal desde la dirección de correo con la que te registraste hacia nuestro equipo de soporte técnico:</p>
+            <p><a href="mailto:soporte@praxistrack.com">soporte@praxistrack.com</a></p>
+            <h3>3. Tiempo de Procesamiento</h3>
+            <p>Las solicitudes de borrado tramitadas vía correo electrónico serán procesadas en un plazo máximo de 72 horas hábiles. Recibirás una confirmación por correo electrónico una vez que todos tus datos hayan sido purgados de nuestros servidores.</p>
+        </section>
+    </main>
+
+    <footer>
+        <p><a href="terminos.html">Centro de condiciones y privacidad de PraxisTrack</a></p>
+    </footer>
+</body>
+</html>
