@@ -1,6 +1,6 @@
 window.PRAXISTRACK_CONFIG = {
-    // URL base de tu backend local en Node.js
-    apiBaseUrl: 'http://localhost:3000/api',
+    // URL base del backend desplegado en Render
+    apiBaseUrl: 'https://praxistrack.onrender.com/api',
 
     // Credenciales públicas de Supabase (las encuentras en tu dashboard de Supabase)
     supabaseUrl: 'https://wqhgyiuqsholvavpvyiu.supabase.co',
