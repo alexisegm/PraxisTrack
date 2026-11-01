@@ -4,8 +4,8 @@
 
 ### Perfil del usuario autenticado
 
-- `GET /perfil` devuelve `id`, `rol`, `nombre_completo` y `documento_identidad` del usuario indicado por el JWT.
-- `PATCH /perfil` acepta `nombre_completo` (3-120 caracteres) y `documento_identidad` (3-40 caracteres). El ID y el rol no son editables por el cliente.
+- `GET /perfil` devuelve `id`, `rol`, `nombre_completo`, `documento_identidad`, `email`, `github`, `linkedin` y `creado_en` del usuario indicado por el JWT. El correo se sincroniza desde Supabase Auth.
+- `PATCH /perfil` acepta `nombre_completo` (3-120 caracteres), `documento_identidad` (3-40 caracteres), `github` y `linkedin` (URL HTTPS válida del dominio correspondiente, o `null`). El ID, el rol y el correo no son editables por el cliente.
 - Ambos endpoints requieren `Authorization: Bearer <access_token de Supabase>`.
 
 **Autenticación:** Todas las peticiones protegidas deben incluir el header:
@@ -21,7 +21,7 @@ Authorization: Bearer <TU_SUPABASE_JWT>
 #### Listar Ofertas Activas
 
 - **Endpoint:** `GET /ofertas`
-- **Roles Permitidos:** `Estudiante`, `Empresa`, `Institucion`.
+- **Acceso:** Público; solo devuelve ofertas activas.
 - **Respuesta (200 OK):**
 
 ```json

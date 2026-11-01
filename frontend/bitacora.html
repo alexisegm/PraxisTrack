@@ -1,308 +1,302 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta content="web_dashboard" name="shell-type"/>
-<title>PraxisTrack - Marketplace de Pasantías</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<style>
-    @layer base {
-      html, body {
-        margin: 0;
-        padding: 0;
-        background-color: #140A0D;
-        color: #F9DBDF;
-      }
-      body {
-        overscroll-behavior: none;
-      }
-    }
-    ::-webkit-scrollbar {
-      display: none;
-    }
-  </style>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "surface": "#140A0D",
-            "surface-dim": "#180D11",
-            "surface-container-lowest": "#12080B",
-            "surface-container-low": "#1C0E13",
-            "surface-container": "#241217",
-            "surface-container-high": "#2D171E",
-            "surface-container-highest": "#3A1E27",
-            "on-surface": "#F9DBDF",
-            "on-surface-variant": "#D0B2B7",
-            "outline": "#4D2530",
-            "outline-variant": "#381923",
-            "primary": "#F99F28",
-            "primary-container": "#F99F28",
-            "on-primary": "#2D1600",
-            "on-primary-container": "#1E0E00",
-            "secondary": "#FFA089",
-            "secondary-container": "#481B24",
-            "tertiary": "#FEC294",
-            "amber-gold": "#F99F28",
-            "wine-glow": "#782338",
-            "success": "#34D399",
-            "error": "#FF8A80"
-          },
-          fontFamily: {
-            sans: ["Plus Jakarta Sans", "sans-serif"],
-            mono: ["JetBrains Mono", "monospace"]
-          },
-          boxShadow: {
-            'glow-amber': '0 0 25px -4px rgba(249, 159, 40, 0.25)',
-            'glow-card': '0 4px 20px -2px rgba(18, 5, 8, 0.7), 0 0 0 1px rgba(77, 37, 48, 0.45)',
-            'glow-card-hover': '0 10px 30px -4px rgba(249, 159, 40, 0.15), 0 0 0 1px rgba(249, 159, 40, 0.4)'
-          }
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraxisTrack - Mi Bitácora</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-      }
-    };
-  </script>
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-menu a.active {
+            color: var(--accent-amber);
+        }
+        .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .bitacora-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .card-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-creado { background-color: rgba(161, 161, 170, 0.1); color: var(--text-muted); }
+        .badge-pendiente { background-color: rgba(245, 158, 11, 0.1); color: var(--accent-amber); }
+        .badge-aprobado { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .badge-rechazado { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+    </style>
 </head>
-<body class="bg-surface font-sans text-on-surface antialiased min-h-screen selection:bg-amber-gold selection:text-black">
-<!-- Subtle ambient background glow -->
-<div class="fixed top-0 left-1/4 w-96 h-96 bg-wine-glow/20 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-<div class="fixed top-20 right-10 w-80 h-80 bg-amber-gold/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
-<!-- Ultra-Clean, Non-Redundant Top Navigation Bar -->
-<header class="sticky top-0 z-50 bg-[#160B0E]/90 backdrop-blur-xl border-b border-outline-variant/60 shadow-lg">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-<!-- Brand & Academic Tag -->
-<div class="flex items-center gap-3 shrink-0">
-<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-high border border-outline/50 shadow-inner group">
-<img alt="PraxisTrack Logo" class="h-6 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlTeumjZPuNXUhiAGRpjl_xO6fhf61PAc1bganhtOtYpM2E3Hk9uKsH2JX_ya5YSlTUsurEDgbeuwiADb2kAu-xNdm5rMlYvtQm7-Mx37wtPYJRhREd8-z7q0Y9MXHXi627s-imO1C8TFQLjQRz7zTNfJycjbFK0PCTEDTs8xzUpavGyBXfdjr-RBatOjSwxNYHbWuT51XTcp2eXfC-GyeDqo5-D0s5jy-rLqKlnNfuGMFx4bwQY6l"/>
-<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-gold ring-2 ring-surface animate-pulse"></span>
-</div>
-<div class="flex flex-col">
-<div class="flex items-center gap-1.5">
-<span class="font-bold text-lg tracking-tight text-white">Praxis<span class="text-amber-gold">Track</span></span>
-<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-gold/15 text-amber-gold font-semibold uppercase tracking-wider border border-amber-gold/30">v2.4</span>
-</div>
-<span class="text-[11px] font-medium text-on-surface-variant/80 -mt-0.5">Tu espacio de pasantías</span>
-</div>
-</div>
-<!-- Main Navigation Tabs (Clean, Student-First, No Redundant Sidebar) -->
-<nav class="hidden md:flex items-center gap-1 bg-surface-container-low/70 border border-outline-variant/60 p-1 rounded-xl">
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-semibold bg-amber-gold text-on-primary shadow-sm transition-all" data-path="marketplace-de-pasantias" href="#">
-<span class="material-symbols-outlined text-[18px]">explore</span>
-<span>Marketplace</span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" data-path="mi-bitacora-de-horas" href="#">
-<span class="material-symbols-outlined text-[18px]">history_edu</span>
-<span>Mi Bitácora</span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" data-path="mis-postulaciones" href="#">
-<span class="material-symbols-outlined text-[18px]">send_and_archive</span>
-<span>Postulaciones</span>
-<span class="w-1.5 h-1.5 rounded-full bg-amber-gold ml-0.5"></span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" data-path="evaluaciones-de-tutor" href="#">
-<span class="material-symbols-outlined text-[18px]">rate_review</span>
-<span>Evaluaciones</span>
-</a>
-</nav>
-<!-- Right Header Elements: Progress Capsule + Alerts + Profile Popover Trigger -->
-<div class="flex items-center gap-3">
-<!-- Live Academic Hours Capsule -->
-<a class="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-surface-container-low border border-outline/50 hover:border-amber-gold/50 transition-all group" href="#">
-<div class="flex flex-col text-right">
-<span class="text-[10px] font-mono text-on-surface-variant/80 uppercase tracking-wider leading-none">Horas Totales</span>
-<span class="text-xs font-mono font-bold text-white group-hover:text-amber-gold transition-colors leading-tight">340 <span class="text-on-surface-variant/60 font-normal">/ 480h</span></span>
-</div>
-<div class="relative w-7 h-7 flex items-center justify-center">
-<svg class="w-7 h-7 transform -rotate-90" viewbox="0 0 36 36">
-<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
-<path class="text-amber-gold" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-dasharray="71, 100" stroke-linecap="round" stroke-width="3.5"></path>
-</svg>
-<span class="absolute text-[8px] font-bold text-amber-gold font-mono">71%</span>
-</div>
-</a>
-<!-- Notifications Bell -->
-<button aria-label="Alertas y Notificaciones" class="relative p-2 text-on-surface-variant hover:text-white bg-surface-container-low hover:bg-surface-container rounded-xl border border-outline-variant/60 transition-colors" type="button">
-<span class="material-symbols-outlined text-[20px] block">notifications</span>
-<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-gold ring-2 ring-[#160B0E]"></span>
-</button>
-<!-- Student Profile Button & Integrated Settings Context -->
-<a data-profile-trigger aria-label="Mi perfil" class="rounded-xl border border-outline-variant/60 px-3 py-2 text-xs font-semibold text-on-surface hover:border-primary transition-all" href="auth.html">Mi perfil</a>
-</div>
-</div>
-</header>
-<!-- Full-Width Workspace Container -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"><div class="flex flex-col w-full space-y-6">
-<!-- Micro-Script for Nav Synchronization & Interactive State Simulation -->
-<script>
-    (function syncPraxisNavigation() {
-      // Synchronize App Shell active state for 'Mi Bitácora'
-      document.querySelectorAll('header nav a').forEach(a => {
-        if (a.getAttribute('data-path') === 'mi-bitacora-de-horas') {
-          a.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-headline-sm text-label-md font-semibold bg-primary text-on-primary shadow-sm transition-all';
-        } else {
-          a.className = 'flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-headline-sm text-label-md font-medium text-on-surface-variant hover:text-on-surface hover:bg-surface-container transition-all';
-        }
-      });
-    })();
-  </script>
-<!-- Top Hero Header & Quick Actions -->
-<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-surface-container-low/80 backdrop-blur-xl p-space-lg rounded-xl shadow-xl"><div class="flex flex-col sm:flex-row sm:items-center gap-3"><h1 class="font-headline-lg text-headline-lg tracking-tight text-on-surface font-bold">Bitácora de Horas</h1><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest text-tertiary text-label-sm font-semibold border border-outline-variant/60"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span>480 hrs requeridas · Semestre 2025-I</span></div><div class="flex items-center gap-2.5"><button class="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface text-label-sm font-semibold transition-all border border-outline-variant/60" id="btnExportPdf" title="Exportar Reporte"><span class="material-symbols-outlined text-[18px] text-tertiary">download</span><span>Exportar</span></button><button class="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary hover:bg-primary-container transition-all shadow-md font-bold text-label-sm" id="btnNewEntry"><span class="material-symbols-outlined text-[18px]">add</span><span>+ Nueva Entrada</span></button></div></div>
-<!-- Key Metrics 4-Grid -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 flex flex-col justify-between"><div class="flex items-center justify-between text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"><span>Horas Aprobadas</span><span class="material-symbols-outlined text-[18px] text-primary">verified</span></div><div class="mt-2 flex items-baseline gap-2"><span class="text-headline-lg font-bold text-on-surface">340</span><span class="text-body-md text-on-surface-variant">/ 480 hrs</span></div><div class="mt-3 flex items-center justify-between text-label-sm text-on-surface-variant"><div class="w-2/3 h-1.5 bg-surface-container-highest rounded-full overflow-hidden"><div class="h-full bg-primary rounded-full" style="width: 70.8%;"></div></div><span class="text-primary font-bold font-mono">71%</span></div></div><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 flex flex-col justify-between"><div class="flex items-center justify-between text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"><span>En Revisión</span><span class="material-symbols-outlined text-[18px] text-secondary">pending_actions</span></div><div class="mt-2 flex items-baseline gap-2"><span class="text-headline-lg font-bold text-secondary">28</span><span class="text-body-md text-on-surface-variant">hrs</span></div><div class="mt-3 text-label-sm text-on-surface-variant flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span><span>2 semanas pendientes</span></div></div><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 flex flex-col justify-between"><div class="flex items-center justify-between text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"><span>Horas Restantes</span><span class="material-symbols-outlined text-[18px] text-tertiary">timelapse</span></div><div class="mt-2 flex items-baseline gap-2"><span class="text-headline-lg font-bold text-on-surface">112</span><span class="text-body-md text-on-surface-variant">hrs</span></div><div class="mt-3 text-label-sm text-on-surface-variant flex items-center gap-1.5"><span class="font-semibold text-tertiary">~5.6 semanas</span><span>restantes</span></div></div><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 flex flex-col justify-between"><div class="flex items-center justify-between text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold"><span>Efectividad</span><span class="material-symbols-outlined text-[18px] text-primary">check_circle</span></div><div class="mt-2 flex items-baseline gap-2"><span class="text-headline-lg font-bold text-primary">96%</span><span class="text-body-md text-on-surface-variant">aprobadas</span></div><div class="mt-3 text-label-sm text-on-surface-variant flex items-center gap-2"><span class="text-primary font-medium">12 aprobadas</span><span class="text-outline">·</span><span class="text-secondary font-medium">1 observada</span></div></div></div>
-<!-- Main Content Layout: Entries Grid + Live Validation Panel -->
-<div class="grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
-<!-- Left / Center: Interactive Entries Table & Finite State Machine Controller (8 cols) -->
-<div class="xl:col-span-8 flex flex-col space-y-4">
-<!-- Filter & Search Toolbar -->
-<div class="bg-surface-container-low/90 backdrop-blur-md p-3 rounded-xl shadow flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-<!-- Search -->
-<div class="relative flex-1">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[18px] text-on-surface-variant">search</span>
-<input class="w-full pl-9 pr-4 py-2 bg-surface-container-lowest text-on-surface placeholder:text-outline text-label-md font-body-md rounded-lg focus:outline-none focus:ring-1 focus:ring-primary transition-all" id="logSearchInput" placeholder="Buscar por tarea técnica, módulo (Auth, API, RLS, CI/CD), commit..." type="text"/>
-</div>
-<!-- Pill Status Filters -->
-<div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0" id="statusFilterBar">
-<button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-sm shrink-0 transition-all" data-status="all">
-            Todas (14)
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high shrink-0 transition-all" data-status="aprobada">
-            Aprobadas (10)
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high shrink-0 transition-all" data-status="revision">
-            En Revisión (2)
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high shrink-0 transition-all" data-status="borrador">
-            Borradores (1)
-          </button>
-<button class="px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high shrink-0 transition-all" data-status="observada">
-            Observadas (1)
-          </button>
-</div>
-<!-- Date Range Filter -->
-<div class="relative shrink-0">
-<button class="flex items-center gap-1.5 px-3 py-2 bg-surface-container-lowest hover:bg-surface-container text-on-surface text-label-sm font-label-sm rounded-lg transition-colors">
-<span class="material-symbols-outlined text-[16px] text-tertiary">calendar_month</span>
-<span>Últimas 4 semanas</span>
-<span class="material-symbols-outlined text-[14px] text-outline">expand_more</span>
-</button>
-</div>
-</div>
-<!-- State Machine Notice Hint -->
-<!-- Entries List Container -->
-<div class="flex flex-col space-y-3" id="entriesContainer"><article class="bg-surface-container-low/95 hover:bg-surface-container transition-all p-3.5 rounded-xl border border-outline-variant/60 shadow-sm" data-item-status="revision"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex flex-col items-center justify-center shrink-0 text-primary font-bold leading-none"><span class="text-sm">12</span><span class="text-[9px] font-mono uppercase text-on-surface-variant">SEM</span></div><div><div class="flex flex-wrap items-center gap-2"><h3 class="font-title-md text-title-md font-semibold text-on-surface">Semana 12 · 14 - 18 Abr</h3><span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-highest text-secondary-fixed-dim">feat/auth-rls-v2</span></div><p class="text-body-md text-on-surface-variant text-sm mt-0.5">RLS en Supabase y endpoints de auditoría en Go DDD.</p><div class="flex items-center gap-3 text-label-sm text-outline mt-1"><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">schedule</span>16 hrs</span><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">school</span>Dra. Arisdelcy R.</span><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">attachment</span>3 archivos</span></div></div></div><div class="flex items-center gap-2 shrink-0 self-end md:self-center"><div class="relative group/fsm"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary-container/70 text-secondary hover:bg-secondary-container text-label-sm font-semibold transition-all"><span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span><span>En Revisión</span><span class="material-symbols-outlined text-[15px] group-hover/fsm:rotate-180 transition-transform">expand_more</span></button><div class="absolute right-0 top-full mt-1.5 w-56 bg-surface-container-high rounded-xl shadow-2xl p-1.5 z-30 opacity-0 pointer-events-none group-hover/fsm:opacity-100 group-hover/fsm:pointer-events-auto transition-all"><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">notification_important</span>Solicitar Urgencia</button><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-secondary flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">undo</span>Volver a Borrador</button></div></div><button class="p-1.5 text-on-surface-variant hover:text-primary rounded-lg transition-colors" title="Ver Detalle"><span class="material-symbols-outlined text-[18px]">visibility</span></button></div></div></article><article class="bg-surface-container-low/95 hover:bg-surface-container transition-all p-3.5 rounded-xl border border-outline-variant/60 shadow-sm" data-item-status="aprobada"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex flex-col items-center justify-center shrink-0 text-primary font-bold leading-none"><span class="text-sm">11</span><span class="text-[9px] font-mono uppercase text-on-surface-variant">SEM</span></div><div><div class="flex flex-wrap items-center gap-2"><h3 class="font-title-md text-title-md font-semibold text-on-surface">Semana 11 · 07 - 11 Abr</h3><span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-highest text-tertiary">refactor/jwt-service</span></div><p class="text-body-md text-on-surface-variant text-sm mt-0.5">Refactor Service Layer y optimización de latencia PostgreSQL.</p><div class="flex items-center gap-3 text-label-sm text-outline mt-1"><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">schedule</span>20 hrs</span><span class="flex items-center gap-1 text-primary font-medium"><span class="material-symbols-outlined text-[14px]">verified</span>Acta #PT-2025-089</span></div></div></div><div class="flex items-center gap-2 shrink-0 self-end md:self-center"><div class="relative group/fsm"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-highest text-primary hover:bg-surface-bright text-label-sm font-semibold transition-all"><span class="material-symbols-outlined text-[14px]">check_circle</span><span>Aprobado</span><span class="material-symbols-outlined text-[15px] group-hover/fsm:rotate-180 transition-transform">expand_more</span></button><div class="absolute right-0 top-full mt-1.5 w-56 bg-surface-container-high rounded-xl shadow-2xl p-1.5 z-30 opacity-0 pointer-events-none group-hover/fsm:opacity-100 group-hover/fsm:pointer-events-auto transition-all"><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-tertiary flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">file_download</span>Descargar Acta PDF</button></div></div><button class="p-1.5 text-on-surface-variant hover:text-primary rounded-lg transition-colors" title="Ver Detalle"><span class="material-symbols-outlined text-[18px]">visibility</span></button></div></div></article><article class="bg-surface-container-low/95 hover:bg-surface-container transition-all p-3.5 rounded-xl border border-outline-variant/60 shadow-sm" data-item-status="observada"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex flex-col items-center justify-center shrink-0 text-secondary font-bold leading-none"><span class="text-sm">10</span><span class="text-[9px] font-mono uppercase text-on-surface-variant">SEM</span></div><div><div class="flex flex-wrap items-center gap-2"><h3 class="font-title-md text-title-md font-semibold text-on-surface">Semana 10 · 31 Mar - 04 Abr</h3><span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-highest text-error">fix/cors-policies</span></div><p class="text-body-md text-on-surface-variant text-sm mt-0.5">Configuración de CORS para microservicios y staging.</p><div class="flex items-center gap-3 text-label-sm text-outline mt-1"><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">schedule</span>12 hrs</span><span class="flex items-center gap-1 text-error font-medium"><span class="material-symbols-outlined text-[14px]">warning</span>Falta reporte Sonar</span></div></div></div><div class="flex items-center gap-2 shrink-0 self-end md:self-center"><div class="relative group/fsm"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-error-container/60 text-error hover:bg-error-container text-label-sm font-semibold transition-all"><span class="material-symbols-outlined text-[14px]">warning</span><span>Observado</span><span class="material-symbols-outlined text-[15px] group-hover/fsm:rotate-180 transition-transform">expand_more</span></button><div class="absolute right-0 top-full mt-1.5 w-56 bg-surface-container-high rounded-xl shadow-2xl p-1.5 z-30 opacity-0 pointer-events-none group-hover/fsm:opacity-100 group-hover/fsm:pointer-events-auto transition-all"><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-[16px] text-primary">rate_review</span>Ver Observación</button><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-primary flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">publish</span>Reenviar Corrección</button></div></div><button class="p-1.5 text-on-surface-variant hover:text-primary rounded-lg transition-colors" title="Editar"><span class="material-symbols-outlined text-[18px]">edit</span></button></div></div></article><article class="bg-surface-container-low/95 hover:bg-surface-container transition-all p-3.5 rounded-xl border border-outline-variant/60 shadow-sm" data-item-status="borrador"><div class="flex flex-col md:flex-row md:items-center justify-between gap-3"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-lg bg-surface-container-high flex flex-col items-center justify-center shrink-0 text-tertiary font-bold leading-none"><span class="text-sm">13</span><span class="text-[9px] font-mono uppercase text-on-surface-variant">SEM</span></div><div><div class="flex flex-wrap items-center gap-2"><h3 class="font-title-md text-title-md font-semibold text-on-surface">Semana 13 · 21 - 25 Abr</h3><span class="font-mono text-[10px] px-2 py-0.5 rounded bg-surface-container-highest text-outline">WIP</span></div><p class="text-body-md text-on-surface-variant text-sm mt-0.5">Diseño de esquema relacional PostgreSQL y eventos.</p><div class="flex items-center gap-3 text-label-sm text-outline mt-1"><span class="flex items-center gap-1 text-on-surface-variant"><span class="material-symbols-outlined text-[14px]">schedule</span>14 hrs registradas</span><span class="flex items-center gap-1 text-tertiary"><span class="material-symbols-outlined text-[14px]">edit_note</span>Edición local</span></div></div></div><div class="flex items-center gap-2 shrink-0 self-end md:self-center"><div class="relative group/fsm"><button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container text-on-surface-variant hover:text-on-surface text-label-sm font-semibold transition-all"><span class="material-symbols-outlined text-[14px]">edit_square</span><span>Borrador</span><span class="material-symbols-outlined text-[15px] group-hover/fsm:rotate-180 transition-transform">expand_more</span></button><div class="absolute right-0 top-full mt-1.5 w-56 bg-surface-container-high rounded-xl shadow-2xl p-1.5 z-30 opacity-0 pointer-events-none group-hover/fsm:opacity-100 group-hover/fsm:pointer-events-auto transition-all"><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-primary flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">send</span>Enviar a Revisión</button><button class="w-full text-left p-2 rounded-lg hover:bg-surface-container-highest text-label-sm font-semibold text-error flex items-center gap-2"><span class="material-symbols-outlined text-[16px]">delete</span>Descartar</button></div></div><button class="p-1.5 text-on-surface-variant hover:text-primary rounded-lg transition-colors" title="Editar"><span class="material-symbols-outlined text-[18px]">edit</span></button></div></div></article></div>
-</div>
-<!-- Right Sidebar (4 cols): Supervisor Live Validation Widget + FSM Compliance Checklist -->
-<div class="xl:col-span-4 flex flex-col space-y-6"><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 shadow-sm space-y-3"><div class="flex items-center justify-between"><span class="text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Tutor Académico</span><span class="px-2 py-0.5 rounded-full bg-surface-container-highest text-primary text-[10px] font-mono font-semibold">ACTIVO</span></div><div class="flex items-center gap-3"><img alt="Dra. Arisdelcy R." class="w-10 h-10 rounded-lg object-cover ring-1 ring-amber-gold/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDwhEGZnFaTl4b36cJjwP8L_Kccx8NAI-e26wkGX2b1nKW21YNus3d_QlkS91spdFVok4IM-z6pCQnZHFMjC35SYoe-lhu4MtFGPCmqdecFHnVdnfKNkwLY3CWvJoS-ul2SgZVGxLmbiDrioX3ycvWi4zv3ucZcB8ETEaV2-drYxs3zjRh3V1z4l6sYVnseEaYLdLp82FcCZrUNYB6dngRDoxqNptKxVyLrRx30K_IJFX1xpWVXrO6"/><div class="min-w-0 flex-1"><h4 class="font-title-md text-sm font-semibold text-on-surface truncate">Dra. Arisdelcy R.</h4><p class="text-xs text-on-surface-variant truncate">Ciencias de la Computación · UNET</p></div><button class="p-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-tertiary transition-colors" title="Enviar Mensaje"><span class="material-symbols-outlined text-[18px]">chat</span></button></div></div><div class="bg-surface-container-low/90 backdrop-blur-md p-4 rounded-xl border border-outline-variant/60 shadow-sm space-y-3"><div class="flex items-center justify-between"><span class="text-label-sm font-semibold uppercase tracking-wider text-on-surface-variant">Distribución de Horas</span><span class="material-symbols-outlined text-[18px] text-tertiary">pie_chart</span></div><div class="flex items-center gap-4 pt-1"><div class="relative w-20 h-20 shrink-0 flex items-center justify-center"><svg class="w-20 h-20 transform -rotate-90" viewbox="0 0 36 36"><circle class="text-surface-container-highest" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-width="4.5"></circle><circle class="text-primary" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="45, 100" stroke-linecap="round" stroke-width="4.5"></circle><circle class="text-tertiary" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="30, 100" stroke-dashoffset="-45" stroke-linecap="round" stroke-width="4.5"></circle><circle class="text-secondary" cx="18" cy="18" fill="none" r="15.9155" stroke="currentColor" stroke-dasharray="25, 100" stroke-dashoffset="-75" stroke-linecap="round" stroke-width="4.5"></circle></svg><div class="absolute flex flex-col items-center"><span class="text-sm font-bold text-on-surface leading-none">340</span><span class="text-[8px] font-mono text-outline">HRS</span></div></div><div class="space-y-1.5 flex-1 text-xs"><div class="flex items-center justify-between"><span class="flex items-center gap-1.5 text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-primary"></span>Backend &amp; APIs</span><span class="font-mono text-on-surface font-semibold">153h</span></div><div class="flex items-center justify-between"><span class="flex items-center gap-1.5 text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-tertiary"></span>DB &amp; PostgreSQL</span><span class="font-mono text-on-surface font-semibold">102h</span></div><div class="flex items-center justify-between"><span class="flex items-center gap-1.5 text-on-surface-variant"><span class="w-2 h-2 rounded-full bg-secondary"></span>Testing &amp; CI/CD</span><span class="font-mono text-on-surface font-semibold">85h</span></div></div></div><div class="pt-2 border-t border-outline-variant/40 flex items-center justify-between text-xs text-on-surface-variant"><span class="flex items-center gap-1 text-[11px]"><span class="material-symbols-outlined text-[14px] text-primary">rule</span>Reglas de acreditación activas</span><a class="text-primary hover:underline text-[11px] font-medium" href="#">Ver requisitos</a></div></div></div>
-</div>
-<!-- Interactive Search / Filter JS Controller for Bitácora -->
-<script>
-    (function initLogInteractivity() {
-      const searchInput = document.getElementById('logSearchInput');
-      const filterButtons = document.querySelectorAll('#statusFilterBar button');
-      function filterEntries() {
-        const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
-        const activeBtn = document.querySelector('#statusFilterBar button.bg-primary');
-        const activeStatus = activeBtn ? activeBtn.getAttribute('data-status') : 'all';
+<body>
 
-        document.querySelectorAll('#entriesContainer article').forEach(entry => {
-          const entryStatus = entry.getAttribute('data-item-status');
-          const entryText = entry.textContent.toLowerCase();
+    <!-- Top Nav Estandarizado -->
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">
+            PraxisTrack <span>v2.4</span>
+        </a>
+        <nav class="topnav-menu">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="bitacora.html" class="active">Mi Bitácora</a>
+            <a href="postulaciones.html">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
+            <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
+        </div>
+    </header>
 
-          const matchesStatus = (activeStatus === 'all') || (entryStatus === activeStatus);
-          const matchesQuery = query === '' || entryText.includes(query);
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Bitácora de Seguimiento de Horas</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Control y validación de jornadas prácticas para pasantías activas.</p>
+        </div>
 
-          if (matchesStatus && matchesQuery) {
-            entry.style.display = 'block';
-          } else {
-            entry.style.display = 'none';
-          }
-        });
-      }
+        <div class="bitacora-grid">
+            <!-- Formulario de Registro (Visible para Estudiantes) -->
+            <div class="card-panel" id="student-form-container">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Registrar Jornada Diaria</h3>
+                <form id="form-bitacora" onsubmit="registrarJornada(event)">
+                    <div class="form-group">
+                        <label for="select-postulacion">ID Postulación (Seleccionada)</label>
+                        <input type="text" id="select-postulacion" required placeholder="UUID de tu postulación seleccionada">
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha-jornada">Fecha de la Jornada</label>
+                        <input type="date" id="fecha-jornada" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="horas-invertidas">Horas Invertidas (Máx. 8)</label>
+                        <input type="number" id="horas-invertidas" step="0.5" min="0.5" max="8" required placeholder="Ej: 4">
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion-jornada">Descripción de Actividades (Mín. 10 carac.)</label>
+                        <textarea id="descripcion-jornada" rows="3" required placeholder="Detalla las tareas realizadas..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">Guardar Registro</button>
+                </form>
+            </div>
 
-      if (searchInput) {
-        searchInput.addEventListener('input', filterEntries);
-      }
+            <!-- Listado e Historial -->
+            <div class="card-panel">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Historial de Registros</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Oferta</th>
+                                <th>Horas</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-bitacora">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted);">Cargando historial...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
 
-      filterButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          filterButtons.forEach(b => {
-            b.className = 'px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-medium bg-surface-container text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high shrink-0 transition-all';
-          });
-          btn.className = 'px-3 py-1.5 rounded-lg text-label-sm font-label-sm font-semibold bg-primary text-on-primary shadow-sm shrink-0 transition-all';
-          filterEntries();
-        });
-      });
-    })();
-  </script>
-</div></main>
-<!-- Interactive Search / Filter Micro-interactions -->
-<script>
-    (function initPraxisDashboard() {
-      const searchInput = document.getElementById('internshipSearch');
-      const filterPills = document.querySelectorAll('#quickFilterPills button');
-      const getCards = () => document.querySelectorAll('#cardsGrid article');
+    <!-- Footer Global -->
+    <footer>
+        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+    </footer>
 
-      // Keyboard Shortcut listener (⌘K / Ctrl+K)
-      window.addEventListener('keydown', (e) => {
-        if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-          e.preventDefault();
-          if (searchInput) {
-            searchInput.focus();
-            searchInput.select();
-          }
-        }
-      });
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        async function initBitacora() {
+            const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
+            const authBtn = document.getElementById('auth-btn-action');
 
-      // Filter pill button interaction
-      filterPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-          filterPills.forEach(p => {
-            p.className = 'px-3 py-1.5 rounded-lg text-xs font-medium bg-surface-container text-on-surface-variant hover:text-white hover:bg-surface-container-high border border-outline-variant/50 transition-all shrink-0';
-          });
-          pill.className = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-gold text-on-primary transition-all flex items-center gap-1.5 shrink-0 shadow-sm';
-
-          const filterType = pill.getAttribute('data-filter');
-          getCards().forEach(card => {
-            if (filterType === 'all') {
-              card.style.display = 'flex';
+            if (token) {
+                authBtn.textContent = 'Cerrar sesión';
+                authBtn.onclick = () => window.PRAXISTRACK_CONFIG.signOut()
+                    .catch(error => alert(`Error al cerrar sesión: ${error.message}`));
             } else {
-              const text = card.textContent.toLowerCase();
-              if (text.includes(filterType)) {
-                card.style.display = 'flex';
-              } else {
-                card.style.display = 'none';
-              }
+                authBtn.textContent = 'Iniciar sesión';
+                authBtn.href = 'auth.html';
+                document.getElementById('tabla-bitacora').innerHTML = `
+                    <tr><td colspan="5" style="color: var(--text-muted);">Inicia sesión para consultar la bitácora.</td></tr>
+                `;
+                return;
             }
-          });
-        });
-      });
 
-      // Real-time quick search input filter
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          const query = e.target.value.toLowerCase().trim();
-          getCards().forEach(card => {
-            const cardText = card.textContent.toLowerCase();
-            if (cardText.includes(query)) {
-              card.style.display = 'flex';
-            } else {
-              card.style.display = 'none';
+            try {
+                const res = await ApiClient.get('/bitacora');
+                renderizarHistorial(res.data || []);
+            } catch (error) {
+                document.getElementById('tabla-bitacora').innerHTML = `
+                    <tr><td colspan="5" style="color: var(--danger-color);">Error al cargar bitácora: ${error.message}</td></tr>
+                `;
             }
-          });
-        });
-      }
-    })();
-  </script>
-<script src="js/config.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/api.js"></script>
-<script src="js/app.js"></script>
-</body></html>
+        }
+
+        function renderizarHistorial(registros) {
+            const tbody = document.getElementById('tabla-bitacora');
+            if (registros.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="color: var(--text-muted);">No hay registros en la bitácora.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = registros.map(reg => {
+                let badgeClass = 'badge-creado';
+                if (reg.estado === 'Pendiente_De_Aprobación') badgeClass = 'badge-pendiente';
+                if (reg.estado === 'Horas_Aprobadas') badgeClass = 'badge-aprobado';
+                if (reg.estado === 'Horas_Rechazadas') badgeClass = 'badge-rechazado';
+
+                return `
+                    <tr>
+                        <td>${reg.fecha}</td>
+                        <td>${reg.oferta || 'N/A'}</td>
+                        <td>${reg.horas} hrs</td>
+                        <td><span class="badge ${badgeClass}">${reg.estado}</span></td>
+                        <td>
+                            ${reg.estado === 'Registro_Creado' ? `<button class="btn-primary" style="padding: 0.2rem 0.4rem; font-size: 0.75rem;" onclick="enviarRevision('${reg.id_registro}')">Enviar a Revisión</button>` : ''}
+                            ${reg.estado === 'Pendiente_De_Aprobación' ? `
+                                <button class="btn-primary" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; background-color: var(--success-color); color: white;" onclick="cambiarEstado('${reg.id_registro}', 'Horas_Aprobadas')">Aprobar</button>
+                                <button class="btn-primary" style="padding: 0.2rem 0.4rem; font-size: 0.75rem; background-color: var(--danger-color); color: white;" onclick="cambiarEstado('${reg.id_registro}', 'Horas_Rechazadas')">Rechazar</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function registrarJornada(e) {
+            e.preventDefault();
+            const body = {
+                id_postulacion: document.getElementById('select-postulacion').value,
+                fecha: document.getElementById('fecha-jornada').value,
+                horas_invertidas: parseFloat(document.getElementById('horas-invertidas').value),
+                descripcion: document.getElementById('descripcion-jornada').value
+            };
+
+            try {
+                const res = await ApiClient.post('/bitacora', body);
+                alert(res.mensaje || 'Registro creado con éxito.');
+                initBitacora();
+            } catch (error) {
+                alert(`Error: ${error.message}`);
+            }
+        }
+
+        async function enviarRevision(idRegistro) {
+            cambiarEstado(idRegistro, 'Pendiente_De_Aprobación');
+        }
+
+        async function cambiarEstado(idRegistro, nuevoEstado) {
+            try {
+                const res = await ApiClient.patch(`/bitacora/${idRegistro}/estado`, { nuevo_estado: nuevoEstado });
+                alert(res.mensaje || 'Estado actualizado correctamente.');
+                initBitacora();
+            } catch (error) {
+                alert(`Error al cambiar estado: ${error.message}`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', initBitacora);
+    </script>
+</body>
+</html>

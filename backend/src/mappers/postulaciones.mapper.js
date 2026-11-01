@@ -11,8 +11,8 @@ class PostulacionesMapper {
         return postulacionesDb.map(postulacion => ({
             id_postulacion: postulacion.id,
             id_estudiante: postulacion.id_estudiante,
-            id_oferta: postulacion.oferta_pasantia.id,
-            titulo_oferta: postulacion.oferta_pasantia.titulo,
+            id_oferta: postulacion.ofertas_pasantias.id,
+            titulo_oferta: postulacion.ofertas_pasantias.titulo,
             estado_actual: postulacion.estado,
             fecha_registro: postulacion.creado_en
         }));

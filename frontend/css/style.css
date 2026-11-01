@@ -1,0 +1,76 @@
+:root {
+    --bg-main: #121214;
+    --bg-card: #1a1a1e;
+    --bg-card-hover: #222228;
+    --border-color: #2e2e38;
+    --text-main: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --accent-amber: #f59e0b;
+    --accent-amber-hover: #d97706;
+    --accent-amber-light: rgba(245, 158, 11, 0.1);
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    flex: 1;
+}
+
+/* Botones estandarizados */
+.btn-primary {
+    background-color: var(--accent-amber);
+    color: #000;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-amber-hover);
+}
+
+/* Footer Global / Centro de condiciones y privacidad */
+footer {
+    text-align: center;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    margin-top: auto;
+}
+
+footer a {
+    color: var(--text-muted);
+    text-decoration: underline;
+}
+
+footer a:hover {
+    color: var(--accent-amber);
+}

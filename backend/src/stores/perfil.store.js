@@ -4,7 +4,7 @@ class PerfilStore {
     async obtener(id) {
         const { data, error } = await supabase
             .from('perfiles')
-            .select('id, rol, nombre_completo, documento_identidad')
+            .select('id, rol, nombre_completo, documento_identidad, email, github, linkedin, creado_en')
             .eq('id', id)
             .maybeSingle();
 
@@ -13,14 +13,19 @@ class PerfilStore {
     }
 
     async actualizar(id, datos) {
+        const cambios = {
+            nombre_completo: datos.nombre_completo,
+            documento_identidad: datos.documento_identidad
+        };
+
+        if (datos.github !== undefined) cambios.github = datos.github;
+        if (datos.linkedin !== undefined) cambios.linkedin = datos.linkedin;
+
         const { data, error } = await supabase
             .from('perfiles')
-            .update({
-                nombre_completo: datos.nombre_completo,
-                documento_identidad: datos.documento_identidad
-            })
+            .update(cambios)
             .eq('id', id)
-            .select('id, rol, nombre_completo, documento_identidad')
+            .select('id, rol, nombre_completo, documento_identidad, email, github, linkedin, creado_en')
             .single();
 
         if (error) throw new Error(error.message);
@@ -30,7 +35,7 @@ class PerfilStore {
     async listarUsuarios() {
         const { data, error } = await supabase
             .from('perfiles')
-            .select('id, rol, nombre_completo, documento_identidad, creado_en')
+            .select('id, rol, nombre_completo, documento_identidad, email, github, linkedin, creado_en')
             .order('nombre_completo', { ascending: true });
 
         if (error) throw new Error(error.message);
@@ -42,7 +47,7 @@ class PerfilStore {
             .from('perfiles')
             .update({ rol })
             .eq('id', id)
-            .select('id, rol, nombre_completo, documento_identidad')
+            .select('id, rol, nombre_completo, documento_identidad, email, github, linkedin, creado_en')
             .single();
 
         if (error) throw new Error(error.message);

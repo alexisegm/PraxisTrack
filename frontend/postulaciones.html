@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraxisTrack - Postulaciones y CV Académico</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-menu a.active {
+            color: var(--accent-amber);
+        }
+        .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .postulaciones-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .card-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            height: fit-content;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        th {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        .badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .badge-enviada { background-color: rgba(245, 158, 11, 0.1); color: var(--accent-amber); }
+        .badge-revision { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .badge-seleccionado { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
+        .badge-rechazado { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+    </style>
+</head>
+<body>
+
+    <!-- Top Nav Estandarizado -->
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">
+            PraxisTrack <span>v2.4</span>
+        </a>
+        <nav class="topnav-menu">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="bitacora.html">Mi Bitácora</a>
+            <a href="postulaciones.html" class="active">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
+            <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div>
+            <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Gestión de Postulaciones</h1>
+            <p style="color: var(--text-muted); font-size: 0.9rem;">Seguimiento del embudo de reclutamiento y perfil profesional académico.</p>
+        </div>
+
+        <div class="postulaciones-layout">
+            <!-- Listado de Postulaciones -->
+            <div class="card-panel">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">Mis Postulaciones Activas</h3>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Oferta</th>
+                                <th>Fecha Registro</th>
+                                <th>Estado Actual</th>
+                                <th>Acción / Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabla-postulaciones">
+                            <tr>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">Cargando postulaciones...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Panel de CV Académico (PDF Simulado) -->
+            <div class="card-panel">
+                <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">CV Académico</h3>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
+                    Genera una vista previa simulada o exporta en formato PDF tu hoja de vida académica validada por la institución.
+                </p>
+                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="simularGeneracionPDF()">
+                    📄 Descargar CV Académico (PDF)
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <footer>
+        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        async function initPostulaciones() {
+            const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
+            const authBtn = document.getElementById('auth-btn-action');
+
+            if (token) {
+                authBtn.textContent = 'Cerrar sesión';
+                authBtn.onclick = () => window.PRAXISTRACK_CONFIG.signOut()
+                    .catch(error => alert(`Error al cerrar sesión: ${error.message}`));
+            } else {
+                authBtn.textContent = 'Iniciar sesión';
+                authBtn.href = 'auth.html';
+                document.getElementById('tabla-postulaciones').innerHTML = `
+                    <tr><td colspan="4" style="color: var(--text-muted);">Inicia sesión para consultar tus postulaciones.</td></tr>
+                `;
+                return;
+            }
+
+            try {
+                const res = await ApiClient.get('/postulaciones');
+                renderizarPostulaciones(res.data || []);
+            } catch (error) {
+                document.getElementById('tabla-postulaciones').innerHTML = `
+                    <tr><td colspan="4" style="color: var(--danger-color);">Error al cargar postulaciones: ${error.message}</td></tr>
+                `;
+            }
+        }
+
+        function renderizarPostulaciones(postulaciones) {
+            const tbody = document.getElementById('tabla-postulaciones');
+            if (postulaciones.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="color: var(--text-muted);">No tienes postulaciones registradas.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = postulaciones.map(post => {
+                let badgeClass = 'badge-enviada';
+                if (post.estado_actual.includes('Revisión')) badgeClass = 'badge-revision';
+                if (post.estado_actual === 'Seleccionado') badgeClass = 'badge-seleccionado';
+                if (post.estado_actual === 'Rechazado') badgeClass = 'badge-rechazado';
+
+                return `
+                    <tr>
+                        <td>${post.titulo_oferta || 'Oferta de Pasantía'}</td>
+                        <td>${new Date(post.fecha_registro).toLocaleDateString()}</td>
+                        <td><span class="badge ${badgeClass}">${post.estado_actual}</span></td>
+                        <td>
+                            ${post.estado_actual === 'Enviada' ? `<span style="font-size:0.8rem; color:var(--text-muted);">En espera de revisión</span>` : ''}
+                            ${post.estado_actual !== 'Enviada' ? `<span style="font-size:0.8rem; color:var(--text-muted);">Proceso en curso</span>` : ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function simularGeneracionPDF() {
+            alert('Generando simulación de PDF con el CV Académico del estudiante... ¡Descarga exitosa!');
+        }
+
+        document.addEventListener('DOMContentLoaded', initPostulaciones);
+    </script>
+</body>
+</html>

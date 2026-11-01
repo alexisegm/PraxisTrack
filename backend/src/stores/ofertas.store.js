@@ -3,7 +3,7 @@ const supabase = require('../config/supabase');
 class OfertasStore {
     async obtenerPorId(id) {
         const { data, error } = await supabase
-            .from('oferta_pasantia')
+            .from('ofertas_pasantias')
             .select('id, id_empresa, titulo, descripcion, activa, creado_en')
             .eq('id', id)
             .maybeSingle();
@@ -14,7 +14,7 @@ class OfertasStore {
 
     async crearOferta(datos, id_empresa) {
         const { data, error } = await supabase
-            .from('oferta_pasantia')
+            .from('ofertas_pasantias')
             .insert([{
                 id_empresa: id_empresa,
                 titulo: datos.titulo,
@@ -30,7 +30,7 @@ class OfertasStore {
 
     async obtenerOfertasActivas() {
         const { data, error } = await supabase
-            .from('oferta_pasantia')
+            .from('ofertas_pasantias')
             .select(`
                 id,
                 titulo,
@@ -47,7 +47,7 @@ class OfertasStore {
 
     async actualizar(id, datos) {
         const { data, error } = await supabase
-            .from('oferta_pasantia')
+            .from('ofertas_pasantias')
             .update(datos)
             .eq('id', id)
             .select('id, id_empresa, titulo, descripcion, activa, creado_en')

@@ -42,11 +42,9 @@ router.delete(
     })
 );
 
-// GET /api/ofertas - Estudiantes, Instituciones y Empresas pueden ver el listado
+// El catálogo activo se puede consultar sin iniciar sesión.
 router.get(
     '/',
-    verificarToken,
-    requerirRol(['Estudiante', 'Empresa', 'Institucion']),
     catchAsync(async (req, res) => {
         const listado = await ofertasService.listarActivas();
         return res.status(200).json({ data: listado });

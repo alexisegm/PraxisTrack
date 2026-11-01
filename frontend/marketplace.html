@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraxisTrack - Marketplace de Pasantías</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SDK oficial de Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Estilos específicos para el Top Nav y Marketplace */
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-menu a.active {
+            color: var(--accent-amber);
+        }
+        .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        .icon-btn:hover {
+            color: var(--accent-amber);
+        }
+        
+        /* Layout del Marketplace */
+        .marketplace-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        .filters-panel {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            height: fit-content;
+        }
+        .filters-panel h3 {
+            font-size: 1rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+        }
+        .search-bar-container {
+            margin-bottom: 1.5rem;
+        }
+        .search-bar-container input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+        .search-bar-container input:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+        }
+        .offers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+        .offer-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: border-color 0.2s;
+        }
+        .offer-card:hover {
+            border-color: var(--accent-amber);
+        }
+        .offer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+        }
+        .offer-company {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        .offer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-main);
+        }
+        .offer-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        .offer-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid var(--border-color);
+            padding-top: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Nav Estandarizado -->
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">
+            PraxisTrack <span>v2.4</span>
+        </a>
+        <nav class="topnav-menu">
+            <a href="marketplace.html" class="active">Marketplace</a>
+            <a href="bitacora.html">Mi Bitácora</a>
+            <a href="postulaciones.html">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
+            <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Oportunidades Disponibles</h1>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">Examina las ofertas de pasantías publicadas por las empresas convenidas.</p>
+            </div>
+            <div id="user-status-banner" style="font-size: 0.85rem; color: var(--accent-amber);"></div>
+        </div>
+
+        <div class="search-bar-container">
+            <input type="text" id="input-search" placeholder="Buscar pasantías por título, empresa o descripción..." oninput="filtrarOfertas()">
+        </div>
+
+        <div class="marketplace-layout">
+            <!-- Panel de Filtrado Lateral -->
+            <aside class="filters-panel">
+                <h3>Filtrar por:</h3>
+                <div style="margin-bottom: 1rem;">
+                    <label style="font-size: 0.85rem; color: var(--text-muted); display: block; margin-bottom: 0.5rem;">Modalidad</label>
+                    <select id="filter-modalidad" style="width: 100%; padding: 0.5rem; background: var(--bg-main); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px;" onchange="filtrarOfertas()">
+                        <option value="">Todas</option>
+                        <option value="Remoto">Remoto</option>
+                        <option value="Híbrido">Híbrido</option>
+                        <option value="Presencial">Presencial</option>
+                    </select>
+                </div>
+            </aside>
+
+            <!-- Listado de Tarjetas de Ofertas -->
+            <section>
+                <div id="offers-grid" class="offers-grid">
+                    <!-- Las ofertas se cargarán dinámicamente aquí desde el backend -->
+                    <p style="color: var(--text-muted);">Cargando ofertas activas...</p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <footer>
+        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+    </footer>
+
+    <!-- Scripts de Integración -->
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        let todasLasOfertas = [];
+
+        async function initMarketplace() {
+            // Verificar sesión para el botón de auth
+            const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
+            const authBtn = document.getElementById('auth-btn-action');
+            const statusBanner = document.getElementById('user-status-banner');
+
+            if (token) {
+                authBtn.textContent = 'Cerrar sesión';
+                authBtn.href = '#';
+                authBtn.onclick = () => window.PRAXISTRACK_CONFIG.signOut()
+                    .catch(error => alert(`Error al cerrar sesión: ${error.message}`));
+                statusBanner.textContent = '● Sesión activa';
+            } else {
+                authBtn.textContent = 'Iniciar sesión';
+                authBtn.href = 'auth.html';
+                statusBanner.textContent = '○ Modo invitado (Inicia sesión para postularte)';
+            }
+
+            // Consumir el endpoint GET /api/ofertas del backend
+            try {
+                const response = await ApiClient.get('/ofertas');
+                todasLasOfertas = response.data || [];
+                renderizarOfertas(todasLasOfertas);
+            } catch (error) {
+                document.getElementById('offers-grid').innerHTML = `
+                    <p style="color: var(--danger-color);">Error al cargar las ofertas: ${error.message}</p>
+                `;
+            }
+        }
+
+        function renderizarOfertas(ofertas) {
+            const grid = document.getElementById('offers-grid');
+            if (ofertas.length === 0) {
+                grid.innerHTML = `<p style="color: var(--text-muted);">No se encontraron ofertas de pasantías disponibles.</p>`;
+                return;
+            }
+
+            grid.innerHTML = ofertas.map(oferta => `
+                <div class="offer-card">
+                    <div>
+                        <div class="offer-header">
+                            <span class="offer-company">🏢 ${oferta.empresa || 'Empresa Convenida'}</span>
+                        </div>
+                        <h3 class="offer-title">${oferta.titulo}</h3>
+                        <p class="offer-desc">${oferta.descripcion}</p>
+                    </div>
+                    <div>
+                        <div class="offer-footer">
+                            <span>Publicado: ${new Date(oferta.fecha_publicacion).toLocaleDateString()}</span>
+                            <button class="btn-primary" style="padding: 0.3rem 0.6rem; font-size: 0.8rem;" onclick="postularse('${oferta.id_oferta}')">Postularme</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filtrarOfertas() {
+            const query = document.getElementById('input-search').value.toLowerCase();
+            const filtradas = todasLasOfertas.filter(o => 
+                o.titulo.toLowerCase().includes(query) || 
+                o.descripcion.toLowerCase().includes(query) || 
+                (o.empresa && o.empresa.toLowerCase().includes(query))
+            );
+            renderizarOfertas(filtradas);
+        }
+
+        async function postularse(idOferta) {
+            const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
+            if (!token) {
+                alert('Debes iniciar sesión como estudiante para postularte.');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            try {
+                const res = await ApiClient.post('/postulaciones', { id_oferta: idOferta });
+                alert(res.mensaje || '¡Postulación enviada con éxito!');
+            } catch (error) {
+                alert(`Error al postularse: ${error.message}`);
+            }
+        }
+
+        // Inicializar al cargar la página
+        document.addEventListener('DOMContentLoaded', initMarketplace);
+    </script>
+</body>
+</html>

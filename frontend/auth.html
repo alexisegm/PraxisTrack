@@ -1,91 +1,227 @@
 <!DOCTYPE html>
-<html lang="es" class="dark">
+<html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Acceso | PraxisTrack</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: { extend: { colors: {
-                surface: '#140A0D', 'surface-container': '#241217',
-                'surface-container-low': '#1C0E13', 'surface-container-high': '#2D171E',
-                'on-surface': '#F9DBDF', 'on-surface-variant': '#D0B2B7',
-                primary: '#F99F28', 'on-primary': '#2D1600',
-                'outline-variant': '#381923', error: '#FF8A80'
-            }, fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] } } }
-        };
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraxisTrack - Autenticación</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SDK oficial de Supabase para manejo de Auth en el navegador -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .auth-container {
+            max-width: 400px;
+            margin: 4rem auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .auth-tab {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.2s, border-bottom 0.2s;
+        }
+        .auth-tab.active {
+            color: var(--accent-amber);
+            border-bottom: 2px solid var(--accent-amber);
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+        }
+        .auth-btn {
+            width: 100%;
+            margin-top: 1rem;
+            padding: 0.75rem;
+        }
+        .alert {
+            padding: 0.75rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+            display: none;
+        }
+        .alert-error {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+        .alert-success {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+    </style>
 </head>
-<body class="min-h-screen bg-surface font-sans text-on-surface">
-    <header class="border-b border-outline-variant bg-surface-container-low px-5 py-4">
-        <a href="index.html" class="mx-auto flex max-w-6xl items-center gap-3 font-bold no-underline">
-            <span class="material-symbols-outlined text-primary" aria-hidden="true">terminal</span>
-            <span>PraxisTrack</span>
-        </a>
-    </header>
-    <main class="mx-auto flex min-h-[calc(100vh-4rem)] max-w-6xl items-center justify-center px-4 py-10">
-        <section class="w-full max-w-lg rounded-2xl border border-outline-variant bg-surface-container-low p-6 shadow-2xl sm:p-8">
-            <p class="mb-2 text-sm font-semibold text-primary">Tu espacio de pasantías</p>
-            <h1 class="text-2xl font-bold">Tu espacio de pasantías</h1>
-            <p class="mt-2 text-sm text-on-surface-variant">Ingresa o crea una cuenta de estudiante para continuar.</p>
+<body>
 
-            <div class="mt-6 grid grid-cols-2 gap-2 rounded-xl bg-surface-container p-1" role="tablist" aria-label="Acceso">
-                <button id="showLogin" class="rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-on-primary" type="button" role="tab" aria-selected="true">Iniciar sesión</button>
-                <button id="showSignup" class="rounded-lg px-3 py-2 text-sm font-semibold text-on-surface-variant" type="button" role="tab" aria-selected="false">Crear cuenta</button>
+    <div class="container">
+        <div class="auth-container">
+            <h2 style="text-align: center; margin-bottom: 1.5rem;">PraxisTrack</h2>
+
+            <div class="auth-tabs">
+                <button id="tab-login" class="auth-tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+                <button id="tab-register" class="auth-tab" onclick="switchTab('register')">Registrarse</button>
             </div>
 
-            <form id="loginForm" class="mt-6 space-y-4">
-                <label class="block text-sm font-medium">Correo electrónico
-                    <input name="email" type="email" autocomplete="email" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Contraseña
-                    <input name="password" type="password" autocomplete="current-password" minlength="8" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <button id="forgotPassword" class="text-sm text-primary underline" type="button">Olvidé mi contraseña</button>
-                <button class="w-full rounded-lg bg-primary px-4 py-3 font-bold text-on-primary" type="submit">Entrar</button>
+            <div id="alert-box" class="alert"></div>
+
+            <!-- Formulario de Inicio de Sesión -->
+            <form id="form-login" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="login-email">Correo Electrónico</label>
+                    <input type="email" id="login-email" required placeholder="correo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Contraseña</label>
+                    <input type="password" id="login-password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-primary auth-btn">Ingresar</button>
             </form>
 
-            <form id="signupForm" class="mt-6 hidden space-y-4">
-                <label class="block text-sm font-medium">Nombre completo
-                    <input name="nombre_completo" type="text" autocomplete="name" minlength="3" maxlength="120" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Documento de identidad
-                    <input name="documento_identidad" type="text" autocomplete="off" minlength="3" maxlength="40" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Correo electrónico
-                    <input name="email" type="email" autocomplete="email" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Contraseña (mínimo 8 caracteres)
-                    <input name="password" type="password" autocomplete="new-password" minlength="8" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Confirmar contraseña
-                    <input name="password_confirmation" type="password" autocomplete="new-password" minlength="8" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <p class="text-xs text-on-surface-variant">El registro público crea cuentas de estudiante. Los roles de empresa e institución deben ser asignados por administración.</p>
-                <button class="w-full rounded-lg bg-primary px-4 py-3 font-bold text-on-primary" type="submit">Crear cuenta de estudiante</button>
+            <!-- Formulario de Registro (Rol Estudiante por defecto según trigger de BD) -->
+            <form id="form-register" style="display: none;" onsubmit="handleRegister(event)">
+                <div class="form-group">
+                    <label for="reg-nombre">Nombre Completo</label>
+                    <input type="text" id="reg-nombre" required placeholder="Tu Nombre">
+                </div>
+                <div class="form-group">
+                    <label for="reg-cedula">Cédula / Documento de Identidad</label>
+                    <input type="text" id="reg-cedula" required placeholder="V-12345678">
+                </div>
+                <div class="form-group">
+                    <label for="reg-email">Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="correo@ejemplo.com">
+                </div>
+                <div class="form-group">
+                    <label for="reg-password">Contraseña</label>
+                    <input type="password" id="reg-password" required placeholder="Mínimo 6 caracteres">
+                </div>
+                <button type="submit" class="btn-primary auth-btn">Crear Cuenta de Estudiante</button>
             </form>
+        </div>
+    </div>
 
-            <form id="recoveryForm" class="mt-6 hidden space-y-4">
-                <label class="block text-sm font-medium">Nueva contraseña
-                    <input name="password" type="password" autocomplete="new-password" minlength="8" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <label class="block text-sm font-medium">Confirmar nueva contraseña
-                    <input name="password_confirmation" type="password" autocomplete="new-password" minlength="8" required class="mt-1 w-full rounded-lg border-outline-variant bg-surface px-3 py-2 text-on-surface">
-                </label>
-                <button class="w-full rounded-lg bg-primary px-4 py-3 font-bold text-on-primary" type="submit">Actualizar contraseña</button>
-            </form>
+    <footer>
+        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+    </footer>
 
-            <p id="authMessage" class="mt-4 min-h-6 text-sm" role="status" aria-live="polite"></p>
-            <p class="mt-4 border-t border-outline-variant pt-4 text-xs text-on-surface-variant">Tu contraseña se valida y almacena exclusivamente mediante Supabase Auth.</p>
-        </section>
-    </main>
+    <!-- Scripts de inicialización -->
     <script src="js/config.js"></script>
-    <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/app.js"></script>
+    <script>
+        // Inicializar cliente de Supabase en el navegador
+        const supabaseClient = window.PRAXISTRACK_CONFIG.supabaseClient;
+
+        function switchTab(tab) {
+            const loginForm = document.getElementById('form-login');
+            const registerForm = document.getElementById('form-register');
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            hideAlert();
+
+            if (tab === 'login') {
+                loginForm.style.display = 'block';
+                registerForm.style.display = 'none';
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+            } else {
+                loginForm.style.display = 'none';
+                registerForm.style.display = 'block';
+                tabRegister.classList.add('active');
+                tabLogin.classList.remove('active');
+            }
+        }
+
+        function showAlert(message, type = 'error') {
+            const box = document.getElementById('alert-box');
+            box.textContent = message;
+            box.className = `alert alert-${type}`;
+            box.style.display = 'block';
+        }
+
+        function hideAlert() {
+            const box = document.getElementById('alert-box');
+            box.style.display = 'none';
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideAlert();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+            if (error) {
+                showAlert(error.message);
+                return;
+            }
+
+            showAlert('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+            setTimeout(() => {
+                window.location.href = 'marketplace.html';
+            }, 1000);
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            hideAlert();
+            const nombre = document.getElementById('reg-nombre').value;
+            const cedula = document.getElementById('reg-cedula').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+
+            // Al registrarse, pasamos metadata que el trigger de Supabase usará para crear el perfil automáticamente
+            const { data, error } = await supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        nombre_completo: nombre,
+                        documento_identidad: cedula
+                    }
+                }
+            });
+
+            if (error) {
+                showAlert(error.message);
+                return;
+            }
+
+            showAlert('¡Cuenta creada con éxito! Revisa tu correo o inicia sesión.', 'success');
+            setTimeout(() => {
+                switchTab('login');
+            }, 2000);
+        }
+    </script>
 </body>
 </html>

@@ -32,7 +32,7 @@ class PostulacionesService {
         }
 
         // Seguridad: Verificar que la oferta pertenece a la empresa que intenta mutar el estado
-        if (idEmpresa.rol !== 'Institucion' && postulacion.oferta_pasantia.id_empresa !== idEmpresa.id) {
+        if (idEmpresa.rol !== 'Institucion' && postulacion.ofertas_pasantias.id_empresa !== idEmpresa.id) {
             throw new AppError('Operación denegada. No eres el propietario de esta oferta.', 403);
         }
 

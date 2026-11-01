@@ -45,17 +45,19 @@ Los roles se leen desde `perfiles.rol`. Los nombres son sensibles a mayúsculas 
 
 El frontend ofrece registro, acceso y recuperación de contraseña en `frontend/auth.html`. `frontend/js/config.js` contiene el Project URL, la clave publicable y la clave anon/JWT pública del proyecto. Esas dos claves son públicas y aptas para el navegador; `SUPABASE_SECRET_KEY` y la antigua `SUPABASE_SERVICE_ROLE_KEY` son exclusivamente backend. La autenticación se realiza contra Supabase Auth; la contraseña no se copia a `perfiles`.
 
-Para instalaciones nuevas o para corregir el trigger existente, apliquen `backend/supabase/migrations/20261028010000_secure_profile_on_signup.sql` desde Supabase SQL Editor o CLI. La migración reemplaza los triggers `en_registro_usuario` y `on_auth_user_created`; crea el perfil relacionado a `auth.users` con rol inicial fijo `Estudiante`; y no confía en un rol proporcionado por el cliente. El registro no inserta una segunda fila de perfil desde el navegador: Supabase Auth crea `auth.users` y el trigger crea `public.perfiles`. El esquema esperado utiliza `public.rol_usuario` y las columnas `id`, `rol`, `nombre_completo` y `documento_identidad`.
+Para instalar o alinear el esquema desde Supabase SQL Editor, ejecuten `backend/supabase/migrations/20261030000000_align_schema_with_application.sql`. El script crea las tablas y enums que consume el backend, activa RLS y sincroniza `perfiles.email` desde `auth.users`; también reemplaza los triggers de registro anteriores. `auth.users` sigue siendo la fuente de verdad del correo y contraseña. El trigger crea el perfil con rol inicial fijo `Estudiante` y no confía en un rol proporcionado por el cliente.
 
 Si está activada la confirmación de correo, la cuenta debe confirmar el email antes de iniciar sesión. Configuren la URL local del frontend en Supabase Auth > URL Configuration y añadan el dominio desplegado en producción. La sesión se conserva en `localStorage` del navegador y se renueva mediante el refresh token de Supabase; cerrar sesión invalida el token remoto.
 
-El perfil se consulta y actualiza por `GET/PATCH /api/perfil`; identidad y rol proceden del token validado y el cliente no puede editar el rol. Las rutas de negocio deben seguir autorizando cada operación por rol y propiedad.
+El perfil se consulta y actualiza por `GET/PATCH /api/perfil`; identidad y rol proceden del token validado y el cliente no puede editar el rol ni el correo. `github` y `linkedin` se guardan en `perfiles` y solo aceptan URLs HTTPS de sus dominios oficiales.
+
+Para poblar datos de prueba, registren y confirmen una cuenta de empresa y otra de estudiante. Reemplacen los correos de ejemplo en `backend/supabase/seed_demo.sql` y ejecútenlo desde Supabase SQL Editor. El script asigna los roles de prueba y crea una oferta, una postulación seleccionada y dos registros de bitácora; ejecútenlo solo en un proyecto de desarrollo.
 
 El proyecto debe servir `frontend/` sobre HTTP (por ejemplo Live Server en `http://localhost:5500`); abrir los HTML como `file://` no es una URL de redirect OAuth/recuperación soportada por Supabase. Para finalizar el alta, configure ese origen en Supabase Auth, revise el trigger y compruebe que la tabla `perfiles` y su enum tengan las columnas y valores documentados. No existe una configuración Supabase ni una base real incluida en el repositorio, así que los accesos externos requieren esas credenciales y ajustes.
 
 En el Dashboard de Supabase, en **Authentication > URL Configuration**, configuren como `Site URL` el origen exacto del servidor frontend (por ejemplo `http://localhost:5500`) y agreguen como `Redirect URLs` `http://localhost:5500/**` y `http://127.0.0.1:5500/**`. El formulario de registro solicita el regreso a `auth.html`; al confirmar el correo, el frontend guarda el access token del callback y continúa al dashboard. El origen del frontend también debe estar permitido por `CORS_ORIGINS` del backend.
 
-La tabla de ofertas usada por el backend es `public.oferta_pasantia`, de acuerdo con el nombre verificado en la base activa. Las demás tablas esperadas son `public.perfiles`, `public.postulaciones` y `public.bitacora_horas`; sus claves y columnas deben conservar las relaciones indicadas por el DDL.
+El nombre de la tabla de ofertas es `public.ofertas_pasantias`, relacionado con `perfiles` mediante `id_empresa`. Las demás tablas son `public.perfiles`, `public.postulaciones` y `public.bitacora_horas`; las relaciones, enums y valores por defecto están definidos en el script SQL anterior.
 
 Para asignar `Empresa` o `Institucion`, creen primero la cuenta por el flujo normal y verifiquen su identidad; luego una persona administradora con acceso al SQL Editor puede actualizar `public.perfiles.rol` por el correo confirmado:
 
@@ -81,6 +83,8 @@ SUPABASE_SECRET_KEY=<SECRET_SERVER_SIDE>
 CORS_ORIGINS=http://localhost:5173
 ```
 
+`SUPABASE_URL` debe ser la URL raíz del proyecto (sin `/rest/v1`). El backend también normaliza ese sufijo si ya está presente en una configuración local.
+
 `CORS_ORIGINS` acepta una lista separada por comas de orígenes completos, por ejemplo `https://frontend.example.com,http://localhost:5173`. En desarrollo, si no se define, el servidor permite `http://localhost:5173`, `http://localhost:5500`, `http://127.0.0.1:5500` y `http://localhost:3000`; en producción es obligatorio configurarlo y el proceso no iniciará si falta. CORS restringe el acceso desde navegadores; no sustituye la autenticación y no impide llamadas directas con cURL o Postman. Las solicitudes sin header `Origin` se permiten para herramientas de línea de comandos.
 
 El backend también acepta `SUPABASE_SERVICE_ROLE_KEY` como nombre compatible con instalaciones antiguas, pero se recomienda `SUPABASE_SECRET_KEY`. No compartan ni incluyan ninguna de esas claves en el frontend, el repositorio ni los logs. `.env` está excluido por `.gitignore`.
@@ -91,7 +95,7 @@ El backend también acepta `SUPABASE_SERVICE_ROLE_KEY` como nombre compatible co
 
 `GET /api/ofertas`
 
-Roles permitidos: `Estudiante`, `Empresa`, `Institucion`.
+Acceso público; solo devuelve ofertas activas.
 
 Devuelve solo ofertas activas, ordenadas de la más reciente a la más antigua. Si no hay ofertas activas, devuelve `200` con `data` como arreglo vacío.
 

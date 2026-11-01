@@ -1,554 +1,265 @@
 <!DOCTYPE html>
-
-<html class="dark" lang="es"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>PraxisTrack - Detalle de Postulación: NuvoMetrics Labs</title>
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "surface": "#140A0D",
-            "surface-dim": "#180D11",
-            "surface-container-lowest": "#12080B",
-            "surface-container-low": "#1C0E13",
-            "surface-container": "#241217",
-            "surface-container-high": "#2D171E",
-            "surface-container-highest": "#3A1E27",
-            "on-surface": "#F9DBDF",
-            "on-surface-variant": "#D0B2B7",
-            "outline": "#4D2530",
-            "outline-variant": "#381923",
-            "primary": "#F99F28",
-            "primary-container": "#F99F28",
-            "on-primary": "#2D1600",
-            "on-primary-container": "#1E0E00",
-            "secondary": "#FFA089",
-            "secondary-container": "#481B24",
-            "tertiary": "#FEC294",
-            "amber-gold": "#F99F28",
-            "wine-glow": "#782338",
-            "success": "#34D399",
-            "error": "#FF8A80"
-          },
-          fontFamily: {
-            sans: ["Plus Jakarta Sans", "sans-serif"],
-            mono: ["JetBrains Mono", "monospace"]
-          },
-          boxShadow: {
-            'glow-amber': '0 0 25px -4px rgba(249, 159, 40, 0.25)',
-            'glow-card': '0 4px 20px -2px rgba(18, 5, 8, 0.7), 0 0 0 1px rgba(77, 37, 48, 0.45)',
-            'glow-card-hover': '0 10px 30px -4px rgba(249, 159, 40, 0.15), 0 0 0 1px rgba(249, 159, 40, 0.4)'
-          }
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PraxisTrack - Mi Perfil</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .topnav {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
-      }
-    };
-  </script>
-<style>
-    body {
-      background-color: #140A0D;
-      color: #F9DBDF;
-      overflow-x: hidden;
-    }
-  </style>
+        .topnav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .topnav-brand span {
+            background-color: var(--accent-amber);
+            color: #000;
+            font-size: 0.7rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+        }
+        .topnav-menu {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .topnav-menu a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .topnav-menu a:hover, .topnav-menu a.active {
+            color: var(--accent-amber);
+        }
+        .topnav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .perfil-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+        }
+        .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .danger-zone {
+            margin-top: 2.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--danger-color);
+        }
+        .danger-zone h3 {
+            color: var(--danger-color);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .btn-danger {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            padding: 0.6rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .btn-danger:hover {
+            background-color: var(--danger-color);
+            color: #fff;
+        }
+    </style>
 </head>
-<body class="bg-surface font-sans text-on-surface antialiased min-h-screen selection:bg-amber-gold selection:text-black">
-<!-- Subtle ambient background glow -->
-<div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-wine-glow/15 rounded-full blur-[140px] pointer-events-none -z-10"></div>
-<div class="fixed top-48 right-10 w-[420px] h-[420px] bg-amber-gold/10 rounded-full blur-[130px] pointer-events-none -z-10"></div>
-<!-- Identical PraxisTrack Top Navigation Bar -->
-<header class="sticky top-0 z-50 bg-[#160B0E]/90 backdrop-blur-xl border-b border-outline-variant/60 shadow-lg">
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-<!-- Brand & Academic Tag -->
-<div class="flex items-center gap-3 shrink-0">
-<div class="relative flex items-center justify-center w-10 h-10 rounded-xl bg-surface-container-high border border-outline/50 shadow-inner group">
-<img alt="PraxisTrack Logo" class="h-6 w-auto object-contain transition-transform group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlTeumjZPuNXUhiAGRpjl_xO6fhf61PAc1bganhtOtYpM2E3Hk9uKsH2JX_ya5YSlTUsurEDgbeuwiADb2kAu-xNdm5rMlYvtQm7-Mx37wtPYJRhREd8-z7q0Y9MXHXi627s-imO1C8TFQLjQRz7zTNfJycjbFK0PCTEDTs8xzUpavGyBXfdjr-RBatOjSwxNYHbWuT51XTcp2eXfC-GyeDqo5-D0s5jy-rLqKlnNfuGMFx4bwQY6l"/>
-<span class="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-amber-gold ring-2 ring-surface animate-pulse"></span>
-</div>
-<div class="flex flex-col">
-<div class="flex items-center gap-1.5">
-<span class="font-bold text-lg tracking-tight text-white">Praxis<span class="text-amber-gold">Track</span></span>
-<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-gold/15 text-amber-gold font-semibold uppercase tracking-wider border border-amber-gold/30">v2.4</span>
-</div>
-<span class="text-[11px] font-medium text-on-surface-variant/80 -mt-0.5">Tu espacio de pasantías</span>
-</div>
-</div>
-<!-- Main Navigation Tabs (Postulaciones ACTIVE with amber accent indicator) -->
-<nav class="hidden md:flex items-center gap-1 bg-surface-container-low/70 border border-outline-variant/60 p-1 rounded-xl">
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" href="#">
-<span class="material-symbols-outlined text-[18px]">explore</span>
-<span>Marketplace</span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" href="#">
-<span class="material-symbols-outlined text-[18px]">history_edu</span>
-<span>Mi Bitácora</span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-semibold bg-amber-gold text-on-primary shadow-sm transition-all relative" href="#">
-<span class="material-symbols-outlined text-[18px]">send_and_archive</span>
-<span>Postulaciones</span>
-<span class="w-1.5 h-1.5 rounded-full bg-surface ml-0.5"></span>
-</a>
-<a class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium text-on-surface-variant hover:text-white hover:bg-surface-container transition-all" href="#">
-<span class="material-symbols-outlined text-[18px]">rate_review</span>
-<span>Evaluaciones</span>
-</a>
-</nav>
-<!-- Right Header Elements: Alerts + Profile -->
-<div class="flex items-center gap-3">
-<!-- Notifications Bell -->
-<button aria-label="Alertas y Notificaciones" class="relative p-2 text-on-surface-variant hover:text-white bg-surface-container-low hover:bg-surface-container rounded-xl border border-outline-variant/60 transition-colors" type="button">
-<span class="material-symbols-outlined text-[20px] block">notifications</span>
-<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-gold ring-2 ring-[#160B0E]"></span>
-</button>
-<!-- Student Profile Button -->
-<a data-profile-trigger aria-label="Mi perfil" class="rounded-xl border border-outline-variant/60 px-3 py-2 text-xs font-semibold text-on-surface hover:border-primary transition-all" href="auth.html">Mi perfil</a>
-</div>
-</div>
-</header>
-<!-- Main Scrollable Content Container -->
-<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-<!-- HERO / APPLICATION HEADER -->
-<header class="relative rounded-2xl bg-surface-container border border-outline/50 p-6 sm:p-8 shadow-xl overflow-hidden backdrop-blur-md">
-<div class="absolute -right-20 -top-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
-<!-- Breadcrumbs -->
-<nav aria-label="Navegación contextual" class="flex flex-wrap items-center justify-between gap-4 mb-6 text-xs text-on-surface-variant">
-<div class="flex items-center gap-2">
-<a class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-bright hover:text-white transition-all text-on-surface-variant" href="#">
-<span class="material-symbols-outlined text-[15px]">arrow_back</span>
-<span>Volver a Postulaciones</span>
-</a>
-<span class="text-outline select-none">/</span>
-<span>Convocatorias 2025-I</span>
-<span class="text-outline select-none">/</span>
-<span class="text-primary font-medium">NuvoMetrics Labs (Backend Go)</span>
-</div>
-<div class="flex items-center gap-2">
-<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-surface-container-high border border-outline-variant text-primary text-xs font-medium">
-<span class="w-1.5 h-1.5 rounded-full bg-primary animate-ping"></span>
-            Convocatoria Oficial UNET
-          </span>
-<button class="p-1.5 rounded-lg bg-surface-container-high hover:bg-surface-bright text-on-surface-variant hover:text-white transition-colors" title="Compartir vacante" type="button">
-<span class="material-symbols-outlined text-[16px]">share</span>
-</button>
-</div>
-</nav>
-<!-- Main Title & Company Row -->
-<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-outline-variant/60">
-<div class="flex items-start sm:items-center gap-4">
-<!-- Constrained Company Thumbnail Badge -->
-<div class="w-14 h-14 sm:w-16 sm:h-16 rounded-xl bg-surface-container-highest border border-outline/60 flex items-center justify-center p-2.5 shrink-0 shadow-md">
-<img alt="NuvoMetrics Labs emblem" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkulOdgTyYu_PvHOgWW_7HbfFNs4xvfSO8IV5Piv_GH_IwKwJROPXnZgCC6odfhwNIVZJgcLhCpAiwlMrPwBQjgPYFlzUjFN0sLenGcuQKSvUmrejNOfcesresnRojvkqxPDAmkDf8uPJexW-QhCyI0OJEzSTNxEAN9_wD4VkP4Yu4sGnxsD6BB9o9xXpBgytlxpeQDdkDhI686BX74Vzu0ww2Wb321fyNyzaej-x12c3UecasNzRH"/>
-</div>
-<div>
-<div class="flex flex-wrap items-center gap-2.5">
-<span class="text-base sm:text-lg font-bold text-white tracking-tight">NuvoMetrics Labs</span>
-<span class="text-on-surface-variant/60 select-none">•</span>
-<span class="text-xs sm:text-sm text-on-surface-variant">Fintech Core Banking</span>
-<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-primary/15 text-primary text-[11px] font-semibold border border-primary/30">
-<span class="material-symbols-outlined text-[13px]">verified</span>
-                Convenio UNET Activo
-              </span>
-</div>
-<h1 class="text-2xl sm:text-3xl font-extrabold text-white mt-1 tracking-tight">Junior Backend Developer (Go / DDD)</h1>
-</div>
-</div>
-<!-- Top Status Pill -->
-<div class="shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-xl bg-primary/10 border border-primary/30 text-primary">
-<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
-<span class="text-xs sm:text-sm font-semibold tracking-wide">Fase 2 de 3: Evaluación Técnica en Curso</span>
-</div>
-</div>
-<!-- Stat Badges & Quick Action Buttons -->
-<div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pt-6">
-<!-- Stat Badges -->
-<div class="flex flex-wrap items-center gap-2 sm:gap-3">
-<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-primary text-on-primary text-xs sm:text-sm font-bold shadow-md">
-<span class="material-symbols-outlined text-[17px]">psychology</span>
-<span>98% Match Académico</span>
-</div>
-<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high border border-outline-variant/60 text-white text-xs sm:text-sm font-medium">
-<span class="material-symbols-outlined text-[17px] text-primary">payments</span>
-<span>$750 USD / mes</span>
-</div>
-<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high border border-outline-variant/60 text-white text-xs sm:text-sm font-medium">
-<span class="material-symbols-outlined text-[17px] text-primary">schedule</span>
-<span>160 hrs Acreditables</span>
-</div>
-<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-surface-container-high border border-outline-variant/60 text-white text-xs sm:text-sm font-medium">
-<span class="material-symbols-outlined text-[17px] text-primary">public</span>
-<span>Remoto 100% (LatAm)</span>
-</div>
-</div>
-<!-- Top Actions -->
-<div class="flex flex-wrap items-center gap-2.5">
-<a class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-amber-400 text-on-primary text-xs sm:text-sm font-bold transition-all shadow-md" href="https://github.com" target="_blank">
-<span class="material-symbols-outlined text-[18px]">open_in_new</span>
-<span>Ver Repositorio del Challenge</span>
-</a>
-<button class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright border border-outline-variant/70 text-on-surface text-xs sm:text-sm font-medium transition-all" type="button">
-<span class="material-symbols-outlined text-[17px] text-primary">download</span>
-<span>Descargar Carta (PDF)</span>
-</button>
-</div>
-</div>
-</header>
-<!-- SECTION 1: STEPPER / ESTADO DE LA POSTULACIÓN -->
-<section class="rounded-2xl bg-surface-container border border-outline/50 p-6 sm:p-7 shadow-xl">
-<div class="flex flex-wrap items-center justify-between gap-2 pb-5 border-b border-outline-variant/50 mb-6">
-<div class="flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[20px]">linear_scale</span>
-<h2 class="text-sm sm:text-base font-bold text-white tracking-wide uppercase">Progreso del Pipeline de Selección</h2>
-</div>
-<span class="text-xs font-mono text-on-surface-variant bg-surface-container-lowest px-2.5 py-1 rounded-lg border border-outline-variant/50">ID Expediente: #PX-2025-0842</span>
-</div>
-<!-- 4-Step Horizontal Pipeline Stepper -->
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-<!-- Step 1 (Done) -->
-<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/60 flex flex-col gap-2 relative">
-<div class="flex items-center justify-between">
-<span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
-<span class="material-symbols-outlined text-[16px]">check</span>
-</span>
-<span class="text-[11px] font-mono text-emerald-400 font-medium">12 Mar · Completado</span>
-</div>
-<span class="text-sm font-bold text-white mt-1">1. Solicitud y Requisitos</span>
-<p class="text-xs text-on-surface-variant leading-relaxed">Expediente entregado, verificado por decanato y sellado.</p>
-</div>
-<!-- Step 2 (Done) -->
-<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/60 flex flex-col gap-2 relative">
-<div class="flex items-center justify-between">
-<span class="w-7 h-7 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center text-xs font-bold">
-<span class="material-symbols-outlined text-[16px]">check</span>
-</span>
-<span class="text-[11px] font-mono text-emerald-400 font-medium">24 Mar · Aprobado</span>
-</div>
-<span class="text-sm font-bold text-white mt-1">2. Validación Curricular</span>
-<p class="text-xs text-on-surface-variant leading-relaxed">Perfil académico validado por el Tutor de Cátedra.</p>
-</div>
-<!-- Step 3 (Active) -->
-<div class="p-4 rounded-xl bg-primary/10 border-2 border-primary/50 shadow-lg relative flex flex-col gap-2">
-<div class="flex items-center justify-between">
-<span class="w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center text-xs font-bold ring-2 ring-primary/30">
-              3
-            </span>
-<span class="text-[11px] font-mono font-bold text-primary bg-primary/20 px-2 py-0.5 rounded">En curso · 4 días restantes</span>
-</div>
-<span class="text-sm font-bold text-primary mt-1">3. Challenge Técnico Go</span>
-<p class="text-xs text-on-surface leading-relaxed">Desarrollo y CI/CD de Conciliación Bancaria activo en GitHub.</p>
-</div>
-<!-- Step 4 (Upcoming) -->
-<div class="p-4 rounded-xl bg-surface-container-low/40 border border-outline-variant/30 flex flex-col gap-2 opacity-60">
-<div class="flex items-center justify-between">
-<span class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface-variant flex items-center justify-center text-xs font-bold">
-              4
-            </span>
-<span class="text-[11px] font-mono text-on-surface-variant">Mayo 2025</span>
-</div>
-<span class="text-sm font-bold text-on-surface-variant mt-1">4. Acreditación Final</span>
-<p class="text-xs text-on-surface-variant leading-relaxed">Firma digital de actas y consolidación de 160 horas.</p>
-</div>
-</div>
-</section>
-<!-- SECTION 2: CHALLENGE TÉCNICO EN CURSO -->
-<section class="rounded-2xl bg-surface-container border border-outline/50 p-6 sm:p-7 shadow-xl space-y-5">
-<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-xl bg-primary/20 text-primary flex items-center justify-center shrink-0 border border-primary/30">
-<span class="material-symbols-outlined text-[22px]">terminal</span>
-</div>
-<div>
-<h2 class="text-base sm:text-lg font-bold text-white">Prueba Técnica: Engine de Conciliación Bancaria</h2>
-<p class="text-xs font-mono text-on-surface-variant">Asignado a: github.com/mateo-v/praxis-nuvometrics-eval</p>
-</div>
-</div>
-<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-surface-container-lowest border border-outline-variant/70 font-mono text-xs text-primary shrink-0 self-start sm:self-auto">
-<span class="material-symbols-outlined text-[16px]">timer</span>
-<span>Deadline: 20 Abr 2025 · 23:59 GMT-4</span>
-</div>
-</div>
-<!-- Code & Pipeline Snapshot Box -->
-<div class="p-4 sm:p-5 rounded-xl bg-surface-container-lowest border border-outline-variant/60 font-mono text-xs space-y-3">
-<div class="flex flex-wrap items-center justify-between gap-2 text-on-surface-variant border-b border-outline-variant/40 pb-3">
-<span class="text-on-surface-variant/80">commit: <strong class="text-white">8f4a1c9</strong> (origin/feature/event-dispatcher)</span>
-<span class="inline-flex items-center gap-1.5 text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">
-<span class="material-symbols-outlined text-[14px]">check_circle</span>
-            CI/CD PIPELINE PASSING
-          </span>
-</div>
-<div class="flex flex-wrap items-center gap-5 text-on-surface">
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-primary"></span>
-<span>Go 1.22.4</span>
-</div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
-<span>Cobertura de Tests: <strong class="text-white">89.4%</strong> (Min. 85%)</span>
-</div>
-<div class="flex items-center gap-1.5">
-<span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span>
-<span>Docker Compose Ready</span>
-</div>
-<div class="flex items-center gap-1.5 text-on-surface-variant ml-auto">
-<span>Última sincronización: hace 2 horas</span>
-</div>
-</div>
-</div>
-<!-- Bottom action bar inside challenge card -->
-<div class="flex flex-wrap items-center gap-3 pt-1">
-<a class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-primary hover:bg-amber-400 text-on-primary text-xs sm:text-sm font-bold transition-all shadow-md" href="https://github.com" target="_blank">
-<span class="material-symbols-outlined text-[17px]">code</span>
-<span>Abrir Repositorio Asignado</span>
-</a>
-<button class="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-bright border border-outline-variant/60 text-white text-xs sm:text-sm font-medium transition-all" type="button">
-<span class="material-symbols-outlined text-[17px] text-primary">download</span>
-<span>Descargar Carta de Postulación UNET</span>
-</button>
-<button class="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-on-surface-variant hover:text-white hover:bg-surface-container-high text-xs sm:text-sm transition-all sm:ml-auto" type="button">
-<span class="material-symbols-outlined text-[17px]">help_center</span>
-<span>Ver Rúbrica de Evaluación</span>
-</button>
-</div>
-</section>
-<!-- SECTION 3: TWO-COLUMN MAIN CONTENT & SIDEBAR GRID (Generous gap-8) -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-<!-- LEFT COLUMN: Main Role Description & Accreditation Blueprint -->
-<div class="lg:col-span-8 space-y-8">
-<!-- Role & Context Section -->
-<article class="rounded-2xl bg-surface-container border border-outline/50 p-6 sm:p-8 shadow-xl space-y-6">
-<div class="flex items-center justify-between pb-3 border-b border-outline-variant/50">
-<h2 class="text-lg sm:text-xl font-bold text-white flex items-center gap-2.5">
-<span class="material-symbols-outlined text-primary text-[22px]">architecture</span>
-              Rol y Contexto del Proyecto
-            </h2>
-<span class="text-xs font-mono text-on-surface-variant">SPRINT-2025-Q2</span>
-</div>
-<p class="text-sm sm:text-base text-on-surface-variant leading-relaxed">
-            Como pasante en el equipo de Core Ledger de <strong class="text-white">NuvoMetrics Labs</strong>, colaborarás en el rediseño del motor de eventos para transacciones multi-moneda de baja latencia. El proyecto aplica principios estrictos de <strong class="text-white">Domain-Driven Design (DDD)</strong> y <strong class="text-white">Arquitectura Hexagonal</strong> para desacoplar las reglas de negocio de los brokers de mensajería y la persistencia relacional.
-          </p>
-<!-- Core Tech & Academic Excellence Bento -->
-<div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
-<!-- Stack Tooling -->
-<div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/50 space-y-3">
-<span class="text-sm font-bold text-primary flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px]">code_blocks</span>
-                Stack &amp; Herramientas Nucleares
-              </span>
-<ul class="space-y-2.5 text-xs sm:text-sm text-on-surface-variant">
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">Golang 1.22+:</strong> Goroutines, Channels, context propagation y linters estrictos.</span>
-</li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">PostgreSQL 16:</strong> Transacciones ACID, Row Level Security (RLS) e índices GiST.</span>
-</li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">Apache Kafka:</strong> Event Sourcing, consumer groups y patrones outbox.</span>
-</li>
-</ul>
-</div>
-<!-- Faculty Criteria -->
-<div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/50 space-y-3">
-<span class="text-sm font-bold text-primary flex items-center gap-2">
-<span class="material-symbols-outlined text-[18px]">rule_folder</span>
-                Criterios de Excelencia UNET
-              </span>
-<ul class="space-y-2.5 text-xs sm:text-sm text-on-surface-variant">
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">Unit Testing:</strong> Cobertura superior al 85% usando Testify y Mocks limpios.</span>
-</li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">Git Flow:</strong> Pull Requests documentados con Conventional Commits.</span>
-</li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-primary text-[16px] shrink-0 mt-0.5">check_circle</span>
-<span><strong class="text-white">Docker:</strong> Contenerización reproducible en multi-stage Dockerfile Alpine.</span>
-</li>
-</ul>
-</div>
-</div>
-</article>
-<!-- Academic Hours Accreditation Blueprint -->
-<article class="rounded-2xl bg-surface-container border border-outline/50 p-6 sm:p-8 shadow-xl space-y-5">
-<div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-outline-variant/50">
-<h3 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[22px]">assignment_turned_in</span>
-              Criterios de Acreditación de Horas (160h)
-            </h3>
-<span class="text-xs font-semibold text-primary bg-primary/10 px-2.5 py-1 rounded-md border border-primary/20">
-              Sincronización con Bitácora
-            </span>
-</div>
-<p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-            Las 160 horas estimadas de esta vacante se sincronizan automáticamente con el Sistema de Validación de Horas de <strong class="text-white">PraxisTrack</strong>. Cada viernes a las 18:00 se genera un reporte consolidado respaldado por la actividad en el repositorio y la firma digital del supervisor de la empresa.
-          </p>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
-<div class="flex items-center gap-3.5 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/50">
-<div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary shrink-0 border border-outline-variant/50">
-<span class="material-symbols-outlined text-[20px]">badge</span>
-</div>
-<div>
-<span class="text-[11px] font-mono text-on-surface-variant block uppercase tracking-wider">Supervisor Asignado</span>
-<span class="text-sm font-bold text-white">Ing. Carlos Méndez</span>
-<span class="text-xs text-primary block leading-tight">Lead Software Architect · NuvoMetrics</span>
-</div>
-</div>
-<div class="flex items-center gap-3.5 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/50">
-<div class="w-10 h-10 rounded-xl bg-surface-container-highest flex items-center justify-center text-primary shrink-0 border border-outline-variant/50">
-<span class="material-symbols-outlined text-[20px]">sync</span>
-</div>
-<div>
-<span class="text-[11px] font-mono text-on-surface-variant block uppercase tracking-wider">Modalidad de Auditoría</span>
-<span class="text-sm font-bold text-white">Sprints Quincenales</span>
-<span class="text-xs text-secondary block leading-tight">20 hrs semanales / 8 semanas total</span>
-</div>
-</div>
-</div>
-</article>
-</div>
-<!-- RIGHT COLUMN: Sidebar Widgets (Company Profile, Academic Tutor, Checklist) -->
-<aside class="lg:col-span-4 space-y-6">
-<!-- Widget 1: Perfil de Empresa (NuvoMetrics Labs) -->
-<article class="rounded-2xl bg-surface-container border border-outline/50 p-6 shadow-xl space-y-4">
-<div class="flex items-center gap-3">
-<div class="w-12 h-12 rounded-xl bg-surface-container-highest border border-outline/60 flex items-center justify-center p-2 shrink-0">
-<img alt="NuvoMetrics Labs logo" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaNk5cXoMySRj5rurccvycHxNuscFh3crsRPH3KF4izwPk47M6iwAAqq-Tl05Q6MTQM0OMfNp2NgnXbrzIBzOJXcIg9xaekqeDUWd84Gy5wFUZO0GLaQSaeznGDw-x8vjLoDKF4capplQqwUOL7r-ad-8lLtkQlH98Bm9NPOccDW5xj7dO1wjLNLr3vHWLECAV5UQezE3Vlv_Sxm-Bptx60CkrFy2jdajCnm6hVueAQgLZfQOeZW1b"/>
-</div>
-<div>
-<h3 class="text-base font-bold text-white">NuvoMetrics Labs</h3>
-<p class="text-xs text-on-surface-variant">Core Banking Cloud Technologies</p>
-</div>
-</div>
-<p class="text-xs sm:text-sm text-on-surface-variant leading-relaxed">
-            Empresa especializada en software para sistemas bancarios transaccionales distribuidos, procesando más de 12 millones de operaciones diarias con clientes en 6 países.
-          </p>
-<div class="grid grid-cols-2 gap-3 p-3.5 rounded-xl bg-surface-container-lowest border border-outline-variant/50">
-<div class="flex flex-col">
-<span class="text-xl font-bold text-primary">14</span>
-<span class="text-[11px] text-on-surface-variant">Pasantes graduados</span>
-</div>
-<div class="flex flex-col">
-<div class="flex items-center gap-1 text-xl font-bold text-primary">
-<span>4.9</span>
-<span class="material-symbols-outlined text-[17px]">star</span>
-</div>
-<span class="text-[11px] text-on-surface-variant">Calificación Tutores</span>
-</div>
-<div class="col-span-2 pt-2 border-t border-outline-variant/40">
-<span class="text-[10px] font-mono text-on-surface-variant uppercase">Sede y Operación</span>
-<span class="text-xs font-semibold text-white block mt-0.5">Montevideo, UY / San Cristóbal, VE (Remoto)</span>
-</div>
-</div>
-<div class="flex items-center justify-between text-xs text-on-surface-variant pt-1 border-t border-outline-variant/40">
-<span class="flex items-center gap-1 text-primary">
-<span class="material-symbols-outlined text-[15px]">verified_user</span>
-              Convenio válido hasta Nov 2026
-            </span>
-<a class="text-primary hover:underline font-semibold" href="#">Ver empresa</a>
-</div>
-</article>
-<!-- Widget 2: Tutor Académico Vinculado -->
-<article class="rounded-2xl bg-surface-container border border-outline/50 p-6 shadow-xl space-y-4">
-<div class="flex items-center justify-between">
-<h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[20px]">school</span>
-              Tutor Académico Vinculado
-            </h3>
-<span class="text-xs font-mono font-bold text-primary px-2 py-0.5 rounded bg-primary/10 border border-primary/20">UNET</span>
-</div>
-<div class="flex items-start gap-3.5 p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/50">
-<!-- Constrained Avatar -->
-<img alt="Dra. Arisdelcy R." class="w-11 h-11 rounded-xl object-cover ring-1 ring-primary/40 shrink-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuARZOe3JHqG18MImrlop3JEObRBvwaKgIKe_wYiL24rrM4PXeYiE1Wnk6ATBltJLHR23B-c1KudTXGkzFxtiVshX5OgyIOOyyb6A7VoT-nFN3f5ZX3J-OJRZ__A2NfmM5Jx0uyoCsuzrv_OC2Lk4PozhuZ_M2uQFio9xs1CvpGHjOk0Z6M7t6tWsH72pFyukRXSrG80ngjZ0b-DH7rm1WAoym1Hr8G9y5LA3CSgzXdMu0_1z07j0EQD"/>
-<div class="flex flex-col">
-<span class="text-sm font-bold text-white">Dra. Arisdelcy R.</span>
-<span class="text-xs text-primary">Cátedra de Arquitectura de Software</span>
-<p class="text-xs text-on-surface-variant mt-1 italic leading-tight">
-                "Convenio validado. Horas pre-autorizadas para el semestre 2025-I."
-              </p>
-</div>
-</div>
-<button class="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-surface-container-high hover:bg-surface-bright border border-outline-variant/60 text-white text-xs sm:text-sm font-medium transition-all" type="button">
-<span class="material-symbols-outlined text-[17px] text-primary">forum</span>
-<span>Consultar con mi Tutor</span>
-</button>
-</article>
-<!-- Widget 3: Checklist Curricular -->
-<article class="rounded-2xl bg-surface-container border border-outline/50 p-6 shadow-xl space-y-4">
-<div class="flex items-center justify-between">
-<h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-<span class="material-symbols-outlined text-primary text-[20px]">fact_check</span>
-              Checklist Curricular
-            </h3>
-<span class="text-xs font-semibold text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">3 de 4 listos</span>
-</div>
-<!-- Progress Bar -->
-<div class="w-full bg-surface-container-lowest h-2 rounded-full overflow-hidden border border-outline-variant/50">
-<div class="bg-primary h-full rounded-full transition-all duration-500" style="width: 75%;"></div>
-</div>
-<div class="space-y-2.5 pt-1">
-<!-- Item 1 -->
-<div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40">
-<span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">check</span>
-</span>
-<div class="flex flex-col">
-<span class="text-xs font-semibold text-white">Créditos de Carrera</span>
-<span class="text-[11px] text-on-surface-variant">82% aprobados (&gt;= 75% requerido)</span>
-</div>
-</div>
-<!-- Item 2 -->
-<div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40">
-<span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">check</span>
-</span>
-<div class="flex flex-col">
-<span class="text-xs font-semibold text-white">Seguro Estudiantil</span>
-<span class="text-[11px] text-on-surface-variant">Póliza universitaria vigente 2025-I</span>
-</div>
-</div>
-<!-- Item 3 -->
-<div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-low border border-outline-variant/40">
-<span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">check</span>
-</span>
-<div class="flex flex-col">
-<span class="text-xs font-semibold text-white">Formulario de Convenio</span>
-<span class="text-[11px] text-on-surface-variant">Firmado digitalmente el 14 Mar</span>
-</div>
-</div>
-<!-- Item 4 (Pending) -->
-<div class="flex items-start gap-3 p-2.5 rounded-xl bg-surface-container-lowest border border-outline-variant/40">
-<span class="w-5 h-5 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[14px]">hourglass_top</span>
-</span>
-<div class="flex flex-col">
-<span class="text-xs font-semibold text-primary">Acta de Compromiso Empresa</span>
-<span class="text-[11px] text-on-surface-variant">Se libera al aprobar el challenge técnico</span>
-</div>
-</div>
-</div>
-</article>
-<!-- Direct Support Capsule -->
-<div class="rounded-xl bg-surface-container-low border border-outline-variant/50 p-4 flex items-start gap-3 text-xs text-on-surface-variant">
-<span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">info</span>
-<p class="leading-relaxed">¿Dudas sobre equivalencia de créditos? Horas de atención virtual: Martes y Jueves 14:00 - 17:00.</p>
-</div>
-</aside>
-</div>
-</main>
-<script src="js/config.js"></script>
-<script src="js/auth.js"></script>
-<script src="js/api.js"></script>
-<script src="js/app.js"></script>
-</body></html>
+<body>
+
+    <!-- Top Nav Estandarizado -->
+    <header class="topnav">
+        <a href="marketplace.html" class="topnav-brand">
+            PraxisTrack <span>v2.4</span>
+        </a>
+        <nav class="topnav-menu">
+            <a href="marketplace.html">Marketplace</a>
+            <a href="bitacora.html">Mi Bitácora</a>
+            <a href="postulaciones.html">Postulaciones</a>
+        </nav>
+        <div class="topnav-actions">
+            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <a href="perfil.html" style="color: var(--accent-amber); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Mi Perfil</a>
+            <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
+        </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+        <div class="perfil-container">
+            <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Administración de Perfil</h1>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Gestiona la información general de tu cuenta y enlaces profesionales.</p>
+
+            <form id="form-perfil" onsubmit="actualizarPerfil(event)">
+                <div class="form-group">
+                    <label for="perfil-rol">Rol asignado</label>
+                    <input type="text" id="perfil-rol" disabled placeholder="Cargando rol...">
+                </div>
+                <div class="form-group">
+                    <label for="perfil-email">Correo electrónico</label>
+                    <input type="email" id="perfil-email" readonly placeholder="Cargando correo...">
+                </div>
+                <div class="form-group">
+                    <label for="perfil-nombre">Nombre Completo</label>
+                    <input type="text" id="perfil-nombre" required placeholder="Tu nombre completo">
+                </div>
+                <div class="form-group">
+                    <label for="perfil-cedula">Documento de Identidad / Cédula</label>
+                    <input type="text" id="perfil-cedula" required placeholder="V-12345678">
+                </div>
+                <div class="form-group">
+                    <label for="perfil-github">Perfil de GitHub (Enlace)</label>
+                    <input type="url" id="perfil-github" placeholder="https://github.com/tu-usuario">
+                </div>
+                <div class="form-group">
+                    <label for="perfil-linkedin">Perfil de LinkedIn (Enlace)</label>
+                    <input type="url" id="perfil-linkedin" placeholder="https://linkedin.com/in/tu-usuario">
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
+                    Guardar Cambios
+                </button>
+            </form>
+
+            <!-- Zona de Peligro: Eliminación de Cuenta -->
+            <div class="danger-zone">
+                <h3>Zona de Peligro</h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+                    Al eliminar tu cuenta se removerán permanentemente tus postulaciones, registros y accesos a la plataforma.
+                </p>
+                <button class="btn-danger" onclick="eliminarCuenta()">Eliminar Mi Cuenta</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Global -->
+    <footer>
+        <p>Centro de condiciones y privacidad de PraxisTrack</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+        async function cargarPerfilEnTiempoReal() {
+            const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
+            const authBtn = document.getElementById('auth-btn-action');
+
+            if (!token) {
+                alert('Debes iniciar sesión para acceder a tu perfil.');
+                window.location.href = 'auth.html';
+                return;
+            }
+
+            authBtn.textContent = 'Cerrar sesión';
+            authBtn.onclick = () => window.PRAXISTRACK_CONFIG.signOut()
+                .catch(error => alert(`Error al cerrar sesión: ${error.message}`));
+
+            try {
+                // Petición al endpoint GET /api/perfil para obtener datos del usuario autenticado
+                const res = await ApiClient.get('/perfil');
+                const perfil = res.data;
+
+                document.getElementById('perfil-rol').value = perfil.rol || 'Estudiante';
+                document.getElementById('perfil-email').value = perfil.email || '';
+                document.getElementById('perfil-nombre').value = perfil.nombre_completo || '';
+                document.getElementById('perfil-cedula').value = perfil.documento_identidad || '';
+                document.getElementById('perfil-github').value = perfil.github || '';
+                document.getElementById('perfil-linkedin').value = perfil.linkedin || '';
+            } catch (error) {
+                alert(`Error al obtener datos del perfil: ${error.message}`);
+            }
+        }
+
+        async function actualizarPerfil(e) {
+            e.preventDefault();
+            const body = {
+                nombre_completo: document.getElementById('perfil-nombre').value,
+                documento_identidad: document.getElementById('perfil-cedula').value,
+                github: document.getElementById('perfil-github').value || null,
+                linkedin: document.getElementById('perfil-linkedin').value || null
+            };
+
+            try {
+                // Enviar mutación PATCH /api/perfil
+                const res = await ApiClient.patch('/perfil', body);
+                alert(res.mensaje || 'Perfil actualizado exitosamente.');
+                cargarPerfilEnTiempoReal();
+            } catch (error) {
+                alert(`Error al actualizar perfil: ${error.message}`);
+            }
+        }
+
+        async function eliminarCuenta() {
+            const confirmacion = confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');
+            if (!confirmacion) return;
+
+            try {
+                // Ejecutar DELETE /api/perfil/cuenta
+                await ApiClient.delete('/perfil/cuenta');
+                alert('Tu cuenta ha sido eliminada correctamente.');
+                localStorage.clear();
+                window.location.href = 'auth.html';
+            } catch (error) {
+                alert(`Error al eliminar cuenta: ${error.message}`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarPerfilEnTiempoReal);
+    </script>
+</body>
+</html>

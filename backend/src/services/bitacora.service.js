@@ -52,7 +52,7 @@ class BitacoraService {
         }
 
         const idEstudiante = registro.postulaciones.id_estudiante;
-        const idEmpresa = registro.postulaciones.oferta_pasantia.id_empresa;
+        const idEmpresa = registro.postulaciones.ofertas_pasantias.id_empresa;
 
         if (nuevoEstado === 'Pendiente_De_Aprobación') {
             if (usuarioAutenticado.rol !== 'Estudiante' || usuarioAutenticado.id !== idEstudiante) {

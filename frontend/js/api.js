@@ -1,186 +1,85 @@
-(function (global) {
-    'use strict';
+/**
+ * Cliente HTTP centralizado para PraxisTrack
+ * Se comunica con el backend asegurando el envío de tokens y manejo de errores.
+ */
+const ApiClient = {
+    async request(endpoint, options = {}) {
+        const baseUrl = window.PRAXISTRACK_CONFIG.apiBaseUrl;
+        const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
 
-    const config = global.PRAXISTRACK_CONFIG || {};
-    const apiBaseUrl = (config.apiBaseUrl || 'http://localhost:3000/api').replace(/\/+$/, '');
+        const headers = {
+            'Content-Type': 'application/json',
+            ...(options.headers || {})
+        };
 
-    function readStoredToken() {
-        const explicitToken = config.accessToken || localStorage.getItem('praxisTrack.accessToken');
-        if (explicitToken) return explicitToken;
-
-        if (config.supabaseStorageKey) {
-            const storedSession = localStorage.getItem(config.supabaseStorageKey);
-            return storedSession ? readSessionToken(storedSession) : null;
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
         }
 
-        const sessionKeys = Object.keys(localStorage).filter(key => /^sb-.+-auth-token$/.test(key));
-        const tokens = sessionKeys
-            .map(key => readSessionToken(localStorage.getItem(key)))
-            .filter(Boolean);
-        const uniqueTokens = [...new Set(tokens)];
+        const config = {
+            ...options,
+            headers
+        };
 
-        if (uniqueTokens.length > 1) {
-            throw new Error('Hay varias sesiones de Supabase. Configura PRAXISTRACK_CONFIG.supabaseStorageKey.');
-        }
-
-        return uniqueTokens[0] || null;
-    }
-
-    function readSessionToken(serializedSession) {
-        if (!serializedSession) return null;
-
-        let session;
         try {
-            session = JSON.parse(serializedSession);
-        } catch {
-            throw new Error('La sesión de Supabase guardada no tiene un formato válido.');
-        }
+            const url = `${baseUrl}${endpoint}`;
+            let response = await fetch(url, config);
 
-        return (session.currentSession || session).access_token || null;
+            if (response.status === 401 && token) {
+                const refreshedToken = await window.PRAXISTRACK_CONFIG.refreshAccessToken();
+                if (refreshedToken && refreshedToken !== token) {
+                    response = await fetch(url, {
+                        ...config,
+                        headers: {
+                            ...headers,
+                            Authorization: `Bearer ${refreshedToken}`
+                        }
+                    });
+                }
+            }
+
+            // Si es 204 No Content (ej. eliminar cuenta), retornamos true directamente
+            if (response.status === 204) {
+                return true;
+            }
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                // El backend devuelve mensajes de error personalizados
+                throw new Error(data.message || data.error || 'Ocurrió un error en la solicitud.');
+            }
+
+            return data;
+        } catch (error) {
+            console.error(`[API Error] ${endpoint}:`, error.message);
+            throw error;
+        }
+    },
+
+    // Métodos auxiliares para abreviar peticiones
+    get(endpoint) {
+        return this.request(endpoint, { method: 'GET' });
+    },
+
+    post(endpoint, body) {
+        return this.request(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(body)
+        });
+    },
+
+    patch(endpoint, body) {
+        return this.request(endpoint, {
+            method: 'PATCH',
+            body: JSON.stringify(body)
+        });
+    },
+
+    delete(endpoint) {
+        return this.request(endpoint, { method: 'DELETE' });
     }
+};
 
-    async function getAccessToken() {
-        if (global.PraxisTrackAuth) {
-            const token = await global.PraxisTrackAuth.getAccessToken();
-            if (token) return token;
-            throw new Error('Inicia sesión con Supabase para usar las funciones del sistema.');
-        }
-
-        if (typeof config.getAccessToken === 'function') {
-            const token = await config.getAccessToken();
-            if (token) return token;
-        }
-
-        const token = readStoredToken();
-        if (!token) {
-            throw new Error('Inicia sesión con Supabase para usar las funciones del sistema.');
-        }
-
-        return token;
-    }
-
-    async function request(path, options = {}) {
-        const headers = new Headers(options.headers || {});
-        let body;
-
-        if (options.body !== undefined) {
-            headers.set('Content-Type', 'application/json');
-            body = JSON.stringify(options.body);
-        }
-
-        if (options.auth !== false) {
-            const accessToken = await getAccessToken();
-            headers.set('Authorization', 'Bearer ' + accessToken);
-        }
-
-        let response;
-        try {
-            response = await fetch(`${apiBaseUrl}${path}`, {
-                method: options.method || 'GET',
-                headers,
-                body
-            });
-        } catch {
-            throw new Error(`No se pudo conectar con la API (${apiBaseUrl}). Verifica que el backend esté activo y que CORS permita este origen.`);
-        }
-
-        if (response.status === 401 && options.auth !== false && !options._retried && global.PraxisTrackAuth) {
-            await global.PraxisTrackAuth.refreshSession();
-            return request(path, { ...options, _retried: true });
-        }
-
-        const responseBody = await response.json();
-        if (!response.ok) {
-            const message = responseBody && (
-                responseBody.message ||
-                responseBody.error ||
-                responseBody.mensaje
-            );
-            throw new Error(message || `La API respondió con HTTP ${response.status}.`);
-        }
-
-        return responseBody;
-    }
-
-    const api = {
-        checkHealth() {
-            const serverBaseUrl = apiBaseUrl.replace(/\/api$/, '');
-            return fetch(`${serverBaseUrl}/api/health`)
-                .then(response => {
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    return response.json();
-                });
-        },
-        listOffers() {
-            return request('/ofertas').then(result => result.data);
-        },
-        applyToOffer(idOferta) {
-            return request('/postulaciones', {
-                method: 'POST',
-                body: { id_oferta: idOferta }
-            }).then(result => result.data);
-        },
-        listApplications() {
-            return request('/postulaciones').then(result => result.data);
-        },
-        getProfile() {
-            return request('/perfil').then(result => result.data);
-        },
-        updateProfile(profile) {
-            return request('/perfil', {
-                method: 'PATCH',
-                body: profile
-            }).then(result => result.data);
-        },
-        listUsers() {
-            return request('/perfil/usuarios').then(result => result.data);
-        },
-        updateUserRole(id, role) {
-            return request(`/perfil/usuarios/${encodeURIComponent(id)}/rol`, {
-                method: 'PATCH',
-                body: { rol: role }
-            }).then(result => result.data);
-        },
-        deleteAccount() {
-            return request('/perfil/cuenta', { method: 'DELETE' });
-        },
-        listTimeEntries() {
-            return request('/bitacora').then(result => result.data);
-        },
-        publishOffer(offer) {
-            return request('/ofertas', {
-                method: 'POST',
-                body: offer
-            }).then(result => result.data);
-        },
-        updateOffer(id, offer) {
-            return request(`/ofertas/${encodeURIComponent(id)}`, {
-                method: 'PATCH',
-                body: offer
-            }).then(result => result.data);
-        },
-        deactivateOffer(id) {
-            return request(`/ofertas/${encodeURIComponent(id)}`, { method: 'DELETE' }).then(result => result.data);
-        },
-        updateApplicationStatus(id, nextStatus) {
-            return request(`/postulaciones/${encodeURIComponent(id)}/estado`, {
-                method: 'PATCH',
-                body: { nuevo_estado: nextStatus }
-            }).then(result => result.data);
-        },
-        createTimeEntry(entry) {
-            return request('/bitacora', {
-                method: 'POST',
-                body: entry
-            }).then(result => result.data);
-        },
-        updateTimeEntryStatus(id, nextStatus) {
-            return request(`/bitacora/${encodeURIComponent(id)}/estado`, {
-                method: 'PATCH',
-                body: { nuevo_estado: nextStatus }
-            }).then(result => result.data);
-        }
-    };
-
-    global.PraxisTrackApi = api;
-})(window);
+// Exportar globalmente
+window.ApiClient = ApiClient;
