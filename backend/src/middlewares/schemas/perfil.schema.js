@@ -27,6 +27,14 @@ const linkedinSchema = z.string()
     .nullable()
     .optional();
 
+function campoCvOpcional(maximo, mensaje) {
+    return z.string()
+        .trim()
+        .max(maximo, { message: mensaje })
+        .nullable()
+        .optional();
+}
+
 const actualizarPerfilSchema = z.object({
     nombre_completo: z.string()
         .trim()
@@ -37,7 +45,14 @@ const actualizarPerfilSchema = z.object({
         .min(3, { message: 'El documento debe tener al menos 3 caracteres.' })
         .max(40, { message: 'El documento no puede exceder 40 caracteres.' }),
     github: githubSchema,
-    linkedin: linkedinSchema
+    linkedin: linkedinSchema,
+    cv_resumen: campoCvOpcional(1000, 'El resumen no puede exceder 1000 caracteres.'),
+    cv_institucion: campoCvOpcional(150, 'La institución no puede exceder 150 caracteres.'),
+    cv_carrera: campoCvOpcional(150, 'La carrera no puede exceder 150 caracteres.'),
+    cv_semestre: campoCvOpcional(40, 'El semestre no puede exceder 40 caracteres.'),
+    cv_promedio: campoCvOpcional(20, 'El promedio no puede exceder 20 caracteres.'),
+    cv_habilidades: campoCvOpcional(500, 'Las habilidades no pueden exceder 500 caracteres.'),
+    cv_experiencia: campoCvOpcional(2000, 'La experiencia no puede exceder 2000 caracteres.')
 }).strict();
 
 const actualizarRolSchema = z.object({

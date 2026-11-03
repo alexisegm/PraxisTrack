@@ -10,7 +10,7 @@
     <style>
         /* Estilos específicos para el Top Nav y Marketplace */
         .topnav {
-            background-color: var(--bg-card);
+            background-color: rgba(58, 19, 21, 0.92);
             border-bottom: 1px solid var(--border-color);
             padding: 0.75rem 2rem;
             display: flex;
@@ -30,7 +30,7 @@
         }
         .topnav-brand span {
             background-color: var(--accent-amber);
-            color: #000;
+            color: var(--on-accent);
             font-size: 0.7rem;
             padding: 0.1rem 0.4rem;
             border-radius: 4px;
@@ -108,16 +108,21 @@
         }
         .offer-card {
             background-color: var(--bg-card);
+            background-image: linear-gradient(180deg, rgba(255, 231, 209, 0.035), transparent 55%);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 1.25rem;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: border-color 0.2s;
+            transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
         .offer-card:hover {
-            border-color: var(--accent-amber);
+            border-color: var(--accent-rust);
+            transform: translateY(-2px);
+            box-shadow:
+                0 24px 45px -30px rgba(0, 0, 0, 0.95),
+                0 0 0 1px rgba(255, 167, 51, 0.12);
         }
         .offer-header {
             display: flex;
@@ -151,6 +156,7 @@
             color: var(--text-muted);
         }
     </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -165,7 +171,7 @@
             <a href="postulaciones.html">Postulaciones</a>
         </nav>
         <div class="topnav-actions">
-            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <button class="icon-btn" id="btn-notificaciones" title="Notificaciones">🔔</button>
             <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
             <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
         </div>
@@ -173,7 +179,7 @@
 
     <!-- Contenido Principal -->
     <main class="container">
-        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; gap: 0.75rem 1.25rem; flex-wrap: wrap;">
             <div>
                 <h1 style="font-size: 1.5rem; margin-bottom: 0.25rem;">Oportunidades Disponibles</h1>
                 <p style="color: var(--text-muted); font-size: 0.9rem;">Examina las ofertas de pasantías publicadas por las empresas convenidas.</p>
@@ -218,6 +224,7 @@
     <!-- Scripts de Integración -->
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/notifications.js"></script>
     <script>
         let todasLasOfertas = [];
 

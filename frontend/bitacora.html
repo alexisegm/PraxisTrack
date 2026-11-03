@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .topnav {
-            background-color: var(--bg-card);
+            background-color: rgba(58, 19, 21, 0.92);
             border-bottom: 1px solid var(--border-color);
             padding: 0.75rem 2rem;
             display: flex;
@@ -27,7 +27,7 @@
         }
         .topnav-brand span {
             background-color: var(--accent-amber);
-            color: #000;
+            color: var(--on-accent);
             font-size: 0.7rem;
             padding: 0.1rem 0.4rem;
             border-radius: 4px;
@@ -115,11 +115,12 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        .badge-creado { background-color: rgba(161, 161, 170, 0.1); color: var(--text-muted); }
-        .badge-pendiente { background-color: rgba(245, 158, 11, 0.1); color: var(--accent-amber); }
-        .badge-aprobado { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
-        .badge-rechazado { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .badge-creado { background-color: var(--badge-neutral-bg); color: var(--text-muted); }
+        .badge-pendiente { background-color: var(--badge-pending-bg); color: var(--accent-amber); }
+        .badge-aprobado { background-color: var(--success-bg); color: var(--success-color); }
+        .badge-rechazado { background-color: var(--badge-danger-bg); color: var(--danger-color); }
     </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -134,7 +135,7 @@
             <a href="postulaciones.html">Postulaciones</a>
         </nav>
         <div class="topnav-actions">
-            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <button class="icon-btn" id="btn-notificaciones" title="Notificaciones">🔔</button>
             <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
             <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
         </div>
@@ -205,6 +206,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/notifications.js"></script>
     <script>
         async function initBitacora() {
             const token = await window.PRAXISTRACK_CONFIG.getAccessToken();

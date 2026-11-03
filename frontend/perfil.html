@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .topnav {
-            background-color: var(--bg-card);
+            background-color: rgba(58, 19, 21, 0.92);
             border-bottom: 1px solid var(--border-color);
             padding: 0.75rem 2rem;
             display: flex;
@@ -27,7 +27,7 @@
         }
         .topnav-brand span {
             background-color: var(--accent-amber);
-            color: #000;
+            color: var(--on-accent);
             font-size: 0.7rem;
             padding: 0.1rem 0.4rem;
             border-radius: 4px;
@@ -93,6 +93,47 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-main);
+            font-family: inherit;
+            font-size: 1rem;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent-amber);
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .cv-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .cv-section h2 {
+            font-size: 1.1rem;
+            margin-bottom: 0.35rem;
+        }
+        .cv-section .section-hint {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.25rem;
+        }
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
         .danger-zone {
             margin-top: 2.5rem;
             padding-top: 1.5rem;
@@ -104,20 +145,22 @@
             margin-bottom: 0.5rem;
         }
         .btn-danger {
-            background-color: rgba(239, 68, 68, 0.1);
+            background-color: var(--danger-bg);
             color: var(--danger-color);
-            border: 1px solid var(--danger-color);
+            border: 1px solid rgba(217, 106, 74, 0.55);
             padding: 0.6rem 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
         }
         .btn-danger:hover {
-            background-color: var(--danger-color);
-            color: #fff;
+            background-color: var(--danger-strong);
+            border-color: var(--danger-strong);
+            color: var(--text-main);
         }
     </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -132,7 +175,7 @@
             <a href="postulaciones.html">Postulaciones</a>
         </nav>
         <div class="topnav-actions">
-            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <button class="icon-btn" id="btn-notificaciones" title="Notificaciones">🔔</button>
             <a href="perfil.html" style="color: var(--accent-amber); text-decoration: none; font-size: 0.9rem; font-weight: 600;">Mi Perfil</a>
             <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
         </div>
@@ -142,7 +185,7 @@
     <main class="container">
         <div class="perfil-container">
             <h1 style="font-size: 1.5rem; margin-bottom: 0.5rem;">Administración de Perfil</h1>
-            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Gestiona la información general de tu cuenta y enlaces profesionales.</p>
+            <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1.5rem;">Gestiona la información general de tu cuenta, tus enlaces profesionales y tu CV académico.</p>
 
             <form id="form-perfil" onsubmit="actualizarPerfil(event)">
                 <div class="form-group">
@@ -170,6 +213,50 @@
                     <input type="url" id="perfil-linkedin" placeholder="https://linkedin.com/in/tu-usuario">
                 </div>
 
+                <div class="cv-section">
+                    <h2>CV Académico</h2>
+                    <p class="section-hint">
+                        Completa estos datos para que el botón «Descargar CV Académico» de Postulaciones genere tu hoja de vida real.
+                    </p>
+
+                    <div class="form-group">
+                        <label for="perfil-cv-resumen">Resumen profesional / académico</label>
+                        <textarea id="perfil-cv-resumen" rows="4" maxlength="1000" placeholder="Ej. Estudiante de Ingeniería de Sistemas con interés en desarrollo web y experiencia en proyectos universitarios."></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="perfil-cv-institucion">Institución académica</label>
+                            <input type="text" id="perfil-cv-institucion" maxlength="150" placeholder="Universidad / Instituto">
+                        </div>
+                        <div class="form-group">
+                            <label for="perfil-cv-carrera">Carrera / Programa</label>
+                            <input type="text" id="perfil-cv-carrera" maxlength="150" placeholder="Ej. Ingeniería de Sistemas">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="perfil-cv-semestre">Semestre / Nivel</label>
+                            <input type="text" id="perfil-cv-semestre" maxlength="40" placeholder="Ej. 8vo semestre">
+                        </div>
+                        <div class="form-group">
+                            <label for="perfil-cv-promedio">Promedio académico</label>
+                            <input type="text" id="perfil-cv-promedio" maxlength="20" placeholder="Ej. 18/20">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="perfil-cv-habilidades">Habilidades</label>
+                        <textarea id="perfil-cv-habilidades" rows="3" maxlength="500" placeholder="JavaScript, Python, trabajo en equipo, comunicación..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="perfil-cv-experiencia">Experiencia académica, proyectos y logros</label>
+                        <textarea id="perfil-cv-experiencia" rows="5" maxlength="2000" placeholder="Proyectos universitarios, pasantías, certificaciones, reconocimientos..."></textarea>
+                    </div>
+                </div>
+
                 <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
                     Guardar Cambios
                 </button>
@@ -194,6 +281,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/notifications.js"></script>
     <script>
         async function cargarPerfilEnTiempoReal() {
             const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
@@ -220,9 +308,22 @@
                 document.getElementById('perfil-cedula').value = perfil.documento_identidad || '';
                 document.getElementById('perfil-github').value = perfil.github || '';
                 document.getElementById('perfil-linkedin').value = perfil.linkedin || '';
+
+                document.getElementById('perfil-cv-resumen').value = perfil.cv_resumen || '';
+                document.getElementById('perfil-cv-institucion').value = perfil.cv_institucion || '';
+                document.getElementById('perfil-cv-carrera').value = perfil.cv_carrera || '';
+                document.getElementById('perfil-cv-semestre').value = perfil.cv_semestre || '';
+                document.getElementById('perfil-cv-promedio').value = perfil.cv_promedio || '';
+                document.getElementById('perfil-cv-habilidades').value = perfil.cv_habilidades || '';
+                document.getElementById('perfil-cv-experiencia').value = perfil.cv_experiencia || '';
             } catch (error) {
                 alert(`Error al obtener datos del perfil: ${error.message}`);
             }
+        }
+
+        function obtenerTextoOpcional(id) {
+            const valor = document.getElementById(id).value.trim();
+            return valor || null;
         }
 
         async function actualizarPerfil(e) {
@@ -231,7 +332,14 @@
                 nombre_completo: document.getElementById('perfil-nombre').value,
                 documento_identidad: document.getElementById('perfil-cedula').value,
                 github: document.getElementById('perfil-github').value || null,
-                linkedin: document.getElementById('perfil-linkedin').value || null
+                linkedin: document.getElementById('perfil-linkedin').value || null,
+                cv_resumen: obtenerTextoOpcional('perfil-cv-resumen'),
+                cv_institucion: obtenerTextoOpcional('perfil-cv-institucion'),
+                cv_carrera: obtenerTextoOpcional('perfil-cv-carrera'),
+                cv_semestre: obtenerTextoOpcional('perfil-cv-semestre'),
+                cv_promedio: obtenerTextoOpcional('perfil-cv-promedio'),
+                cv_habilidades: obtenerTextoOpcional('perfil-cv-habilidades'),
+                cv_experiencia: obtenerTextoOpcional('perfil-cv-experiencia')
             };
 
             try {

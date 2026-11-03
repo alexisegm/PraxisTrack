@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/style.css">
     <style>
         .topnav {
-            background-color: var(--bg-card);
+            background-color: rgba(58, 19, 21, 0.92);
             border-bottom: 1px solid var(--border-color);
             padding: 0.75rem 2rem;
             display: flex;
@@ -27,7 +27,7 @@
         }
         .topnav-brand span {
             background-color: var(--accent-amber);
-            color: #000;
+            color: var(--on-accent);
             font-size: 0.7rem;
             padding: 0.1rem 0.4rem;
             border-radius: 4px;
@@ -94,11 +94,37 @@
             font-size: 0.75rem;
             font-weight: 600;
         }
-        .badge-enviada { background-color: rgba(245, 158, 11, 0.1); color: var(--accent-amber); }
-        .badge-revision { background-color: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .badge-seleccionado { background-color: rgba(16, 185, 129, 0.1); color: var(--success-color); }
-        .badge-rechazado { background-color: rgba(239, 68, 68, 0.1); color: var(--danger-color); }
+        .badge-enviada { background-color: var(--badge-pending-bg); color: var(--accent-amber); }
+        .badge-revision { background-color: var(--success-bg); color: var(--success-color); }
+        .badge-seleccionado { background-color: var(--success-bg); color: var(--success-color); }
+        .badge-rechazado { background-color: var(--badge-danger-bg); color: var(--danger-color); }
+        .cv-summary {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.9rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+        }
+        .cv-summary strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 0.95rem;
+            margin-bottom: 0.25rem;
+        }
+        .cv-summary a {
+            color: var(--accent-amber);
+        }
+        .cv-hint {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            line-height: 1.45;
+            margin-top: 0.75rem;
+            text-align: center;
+        }
     </style>
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
 <body>
 
@@ -113,7 +139,7 @@
             <a href="postulaciones.html" class="active">Postulaciones</a>
         </nav>
         <div class="topnav-actions">
-            <button class="icon-btn" title="Notificaciones">🔔</button>
+            <button class="icon-btn" id="btn-notificaciones" title="Notificaciones">🔔</button>
             <a href="perfil.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem;">Mi Perfil</a>
             <a href="auth.html" id="auth-btn-action" class="btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">Iniciar sesión</a>
         </div>
@@ -149,15 +175,19 @@
                 </div>
             </div>
 
-            <!-- Panel de CV Académico (PDF Simulado) -->
+            <!-- Panel de CV Académico -->
             <div class="card-panel">
                 <h3 style="margin-bottom: 1rem; font-size: 1.1rem;">CV Académico</h3>
                 <p style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 1rem;">
-                    Genera una vista previa simulada o exporta en formato PDF tu hoja de vida académica validada por la institución.
+                    Descarga tu hoja de vida académica con los datos que registraste en Mi Perfil.
                 </p>
-                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="simularGeneracionPDF()">
+                <div id="cv-academico-resumen" class="cv-summary">Cargando información de tu CV...</div>
+                <button class="btn-primary" style="width: 100%; justify-content: center;" onclick="descargarCVAcademico()">
                     📄 Descargar CV Académico (PDF)
                 </button>
+                <p class="cv-hint">
+                    Se abrirá una vista imprimible de tu CV. En el diálogo de impresión elige «Guardar como PDF».
+                </p>
             </div>
         </div>
     </main>
@@ -170,7 +200,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/notifications.js"></script>
     <script>
+        let perfilActual = null;
+        const CAMPOS_CV = [
+            'cv_resumen',
+            'cv_institucion',
+            'cv_carrera',
+            'cv_semestre',
+            'cv_promedio',
+            'cv_habilidades',
+            'cv_experiencia'
+        ];
+
         async function initPostulaciones() {
             const token = await window.PRAXISTRACK_CONFIG.getAccessToken();
             const authBtn = document.getElementById('auth-btn-action');
@@ -185,6 +227,10 @@
                 document.getElementById('tabla-postulaciones').innerHTML = `
                     <tr><td colspan="4" style="color: var(--text-muted);">Inicia sesión para consultar tus postulaciones.</td></tr>
                 `;
+                document.getElementById('cv-academico-resumen').innerHTML = `
+                    <strong>Inicia sesión para consultar tu CV</strong>
+                    <a href="auth.html">Accede a tu cuenta</a> para ver y descargar tu currículum académico.
+                `;
                 return;
             }
 
@@ -196,6 +242,65 @@
                     <tr><td colspan="4" style="color: var(--danger-color);">Error al cargar postulaciones: ${error.message}</td></tr>
                 `;
             }
+
+            await cargarCVAcademico();
+        }
+
+        async function cargarCVAcademico() {
+            const contenedor = document.getElementById('cv-academico-resumen');
+
+            try {
+                const res = await ApiClient.get('/perfil');
+                perfilActual = res.data || null;
+            } catch (error) {
+                contenedor.innerHTML = `<strong>No se pudo cargar tu CV</strong>${escaparHTML(error.message)}`;
+                return;
+            }
+
+            if (!tieneCVAcademico(perfilActual)) {
+                contenedor.innerHTML = `
+                    <strong>Aún no has registrado tu CV académico</strong>
+                    Completa tus datos académicos en <a href="perfil.html">Mi Perfil</a> para poder descargarlo.
+                `;
+                return;
+            }
+
+            const formacion = [perfilActual.cv_carrera, perfilActual.cv_institucion]
+                .filter(Boolean)
+                .map(escaparHTML)
+                .join(' · ');
+            const detalle = [perfilActual.cv_semestre, perfilActual.cv_promedio && `Promedio: ${perfilActual.cv_promedio}`]
+                .filter(Boolean)
+                .map(escaparHTML)
+                .join(' · ');
+
+            contenedor.innerHTML = `
+                <strong>${escaparHTML(perfilActual.nombre_completo || 'Estudiante')}</strong>
+                ${formacion ? `<div>${formacion}</div>` : ''}
+                ${detalle ? `<div style="margin-top: 0.25rem;">${detalle}</div>` : ''}
+                <div style="margin-top: 0.5rem;"><a href="perfil.html">Editar CV en Mi Perfil</a></div>
+            `;
+        }
+
+        function tieneCVAcademico(perfil) {
+            return Boolean(perfil) && CAMPOS_CV.some(campo => {
+                const valor = perfil[campo];
+                return typeof valor === 'string' && valor.trim() !== '';
+            });
+        }
+
+        function escaparHTML(valor) {
+            return String(valor ?? '').replace(/[&<>"']/g, caracter => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[caracter]));
+        }
+
+        function textoConSaltos(valor) {
+            return escaparHTML(valor).replace(/\r?\n/g, '<br>');
         }
 
         function renderizarPostulaciones(postulaciones) {
@@ -225,8 +330,236 @@
             }).join('');
         }
 
-        function simularGeneracionPDF() {
-            alert('Generando simulación de PDF con el CV Académico del estudiante... ¡Descarga exitosa!');
+        function descargarCVAcademico() {
+            if (!perfilActual) {
+                alert('No se pudo cargar tu perfil. Recarga la página e inténtalo de nuevo.');
+                return;
+            }
+
+            if (!tieneCVAcademico(perfilActual)) {
+                const irAlPerfil = confirm('Aún no has registrado tu CV académico. ¿Quieres completarlo ahora en Mi Perfil?');
+                if (irAlPerfil) window.location.href = 'perfil.html';
+                return;
+            }
+
+            const ventana = window.open('', '_blank');
+            if (!ventana) {
+                alert('El navegador bloqueó la vista del CV. Permite las ventanas emergentes para este sitio e inténtalo de nuevo.');
+                return;
+            }
+
+            ventana.document.open();
+            ventana.document.write(construirHTMLCV(perfilActual));
+            ventana.document.close();
+            ventana.focus();
+        }
+
+        function construirHTMLCV(perfil) {
+            const nombre = escaparHTML(perfil.nombre_completo || 'Estudiante');
+            const carrera = perfil.cv_carrera ? escaparHTML(perfil.cv_carrera) : '';
+            const institucion = perfil.cv_institucion ? escaparHTML(perfil.cv_institucion) : '';
+            const semestre = perfil.cv_semestre ? escaparHTML(perfil.cv_semestre) : '';
+            const promedio = perfil.cv_promedio ? escaparHTML(perfil.cv_promedio) : '';
+
+            const contacto = [
+                perfil.email && `<span>${escaparHTML(perfil.email)}</span>`,
+                perfil.github && `<span>${escaparHTML(perfil.github)}</span>`,
+                perfil.linkedin && `<span>${escaparHTML(perfil.linkedin)}</span>`
+            ].filter(Boolean).join('<span class="separador">•</span>');
+
+            const encabezadoAcademico = [carrera, institucion].filter(Boolean).join(' · ');
+            const detalleAcademico = [
+                semestre,
+                promedio && `Promedio: ${promedio}`
+            ].filter(Boolean).join(' · ');
+
+            const formacion = (carrera || institucion || semestre || promedio) ? `
+                <section>
+                    <h2>Formación académica</h2>
+                    <div class="item">
+                        ${carrera ? `<h3>${carrera}</h3>` : ''}
+                        ${institucion ? `<p class="institucion">${institucion}</p>` : ''}
+                        ${detalleAcademico ? `<p class="meta">${detalleAcademico}</p>` : ''}
+                    </div>
+                </section>
+            ` : '';
+
+            const resumen = perfil.cv_resumen ? `
+                <section>
+                    <h2>Perfil académico</h2>
+                    <p>${textoConSaltos(perfil.cv_resumen)}</p>
+                </section>
+            ` : '';
+
+            const habilidades = (perfil.cv_habilidades || '')
+                .split(/[,;\n]+/)
+                .map(habilidad => habilidad.trim())
+                .filter(Boolean);
+
+            const seccionHabilidades = habilidades.length ? `
+                <section>
+                    <h2>Habilidades</h2>
+                    <ul class="habilidades">
+                        ${habilidades.map(habilidad => `<li>${escaparHTML(habilidad)}</li>`).join('')}
+                    </ul>
+                </section>
+            ` : '';
+
+            const experiencia = perfil.cv_experiencia ? `
+                <section>
+                    <h2>Experiencia académica, proyectos y logros</h2>
+                    <p>${textoConSaltos(perfil.cv_experiencia)}</p>
+                </section>
+            ` : '';
+
+            return `<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Académico - ${nombre}</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #ece7e1;
+            color: #241a17;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.55;
+        }
+        .barra {
+            position: sticky;
+            top: 0;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 0.85rem;
+            background: #3a1315;
+            color: #f7eee7;
+        }
+        .barra button {
+            background: #ffa733;
+            color: #2b1008;
+            border: 0;
+            border-radius: 8px;
+            padding: 0.55rem 1rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .barra span { font-size: 0.85rem; align-self: center; }
+        .hoja {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 1.5rem auto;
+            padding: 18mm;
+            background: #ffffff;
+            box-shadow: 0 18px 45px -22px rgba(0, 0, 0, 0.45);
+        }
+        .cv-header {
+            border-bottom: 3px solid #a23a17;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .cv-header h1 {
+            margin: 0;
+            font-size: 2rem;
+            letter-spacing: -0.02em;
+            color: #3a1315;
+        }
+        .cv-header .titulo {
+            margin: 0.25rem 0 0;
+            font-size: 1rem;
+            color: #6a2a22;
+        }
+        .cv-header .contacto {
+            margin: 0.6rem 0 0;
+            font-size: 0.85rem;
+            color: #5b4a44;
+            word-break: break-word;
+        }
+        .separador { margin: 0 0.5rem; color: #c59266; }
+        section { margin-bottom: 1.4rem; }
+        section h2 {
+            margin: 0 0 0.55rem;
+            font-size: 0.82rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #a23a17;
+        }
+        section p { margin: 0; }
+        .item h3 {
+            margin: 0;
+            font-size: 1.05rem;
+            color: #241a17;
+        }
+        .item .institucion { margin-top: 0.1rem; }
+        .item .meta, .meta {
+            margin-top: 0.15rem;
+            color: #6b5a52;
+            font-size: 0.9rem;
+        }
+        .habilidades {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .habilidades li {
+            background: #f2ece5;
+            border: 1px solid #d8c7b6;
+            border-radius: 999px;
+            padding: 0.2rem 0.65rem;
+            font-size: 0.85rem;
+        }
+        footer {
+            margin-top: 2rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid #d8c7b6;
+            color: #7d6a61;
+            font-size: 0.75rem;
+            text-align: center;
+        }
+        @page { size: A4; margin: 0; }
+        @media print {
+            body { background: #ffffff; }
+            .barra { display: none; }
+            .hoja {
+                width: auto;
+                min-height: auto;
+                margin: 0;
+                padding: 18mm;
+                box-shadow: none;
+            }
+            section { break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="barra">
+        <button type="button" onclick="window.print()">Imprimir / Guardar como PDF</button>
+        <span>Elige «Guardar como PDF» en el destino del diálogo de impresión.</span>
+    </div>
+    <main class="hoja">
+        <header class="cv-header">
+            <h1>${nombre}</h1>
+            ${encabezadoAcademico ? `<p class="titulo">${encabezadoAcademico}</p>` : ''}
+            ${contacto ? `<p class="contacto">${contacto}</p>` : ''}
+        </header>
+        ${resumen}
+        ${formacion}
+        ${seccionHabilidades}
+        ${experiencia}
+        <footer>Currículum académico generado desde PraxisTrack · ${new Date().toLocaleDateString('es-ES')}</footer>
+    </main>
+    <script>
+        window.addEventListener('load', function () {
+            setTimeout(function () { window.print(); }, 300);
+        });
+    <\/script>
+</body>
+</html>`;
         }
 
         document.addEventListener('DOMContentLoaded', initPostulaciones);

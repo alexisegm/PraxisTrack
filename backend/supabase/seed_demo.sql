@@ -43,7 +43,14 @@ BEGIN
     WHERE id = v_id_empresa;
 
     UPDATE public.perfiles
-    SET rol = 'Estudiante'::public.rol_usuario
+    SET rol = 'Estudiante'::public.rol_usuario,
+        cv_resumen = 'Estudiante de Ingeniería de Sistemas con interés en desarrollo web y proyectos de software.',
+        cv_institucion = 'Universidad Nacional',
+        cv_carrera = 'Ingeniería de Sistemas',
+        cv_semestre = '8vo semestre',
+        cv_promedio = '18/20',
+        cv_habilidades = 'JavaScript, Node.js, SQL, trabajo en equipo',
+        cv_experiencia = 'Proyecto académico de gestión de inventario y pasantía de desarrollo web.'
     WHERE id = v_id_estudiante;
 
     INSERT INTO public.ofertas_pasantias (

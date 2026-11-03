@@ -1,0 +1,304 @@
+/* ============================================================
+   PraxisTrack · Adaptación automática móvil / tablet / PC
+   Se carga después del <style> de cada página para poder
+   sobrescribir las grillas definidas en cada HTML.
+   ============================================================ */
+
+/* --- Medios fluidos --- */
+img,
+svg,
+video,
+canvas {
+    max-width: 100%;
+    height: auto;
+}
+
+/* --- Escritorio amplio: aprovechar el espacio sin estirar de más --- */
+@media (min-width: 1440px) {
+    .container {
+        max-width: 1280px;
+    }
+}
+
+/* --- Barra de navegación --- */
+@media (max-width: 860px) {
+    .topnav {
+        flex-wrap: wrap;
+        row-gap: 0.45rem;
+        padding: 0.65rem 1rem !important;
+    }
+
+    .topnav-brand {
+        font-size: 1rem;
+    }
+
+    .topnav-menu {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start !important;
+        gap: 0.25rem !important;
+        overflow-x: auto;
+        padding: 0.1rem 0 0.15rem;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .topnav-menu::-webkit-scrollbar {
+        display: none;
+    }
+
+    .topnav-menu a {
+        font-size: 0.82rem !important;
+        padding: 0.35rem 0.55rem;
+        white-space: nowrap;
+        border-radius: 6px;
+    }
+
+    .topnav-menu a.active {
+        background-color: rgba(255, 167, 51, 0.12);
+        color: var(--accent-amber);
+    }
+
+    .topnav-menu a.active::after {
+        display: none;
+    }
+
+    .topnav-actions {
+        margin-left: auto;
+        gap: 0.6rem !important;
+    }
+
+    .topnav-actions a:not(.btn-primary) {
+        font-size: 0.82rem !important;
+    }
+
+    .topnav .btn-primary {
+        padding: 0.35rem 0.7rem !important;
+        font-size: 0.8rem !important;
+    }
+
+    .icon-btn {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .topnav-brand span {
+        display: none;
+    }
+
+    .topnav-menu a {
+        font-size: 0.78rem !important;
+    }
+
+    .topnav .btn-primary {
+        padding: 0.3rem 0.55rem !important;
+        font-size: 0.76rem !important;
+    }
+}
+
+/* --- Contenedores y grillas de contenido --- */
+.marketplace-layout > *,
+.bitacora-grid > *,
+.postulaciones-layout > *,
+.card-panel {
+    /* Permite que las tablas anchas hagan scroll interno
+       en lugar de estirar la columna fuera de la pantalla. */
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .marketplace-layout,
+    .bitacora-grid,
+    .postulaciones-layout {
+        grid-template-columns: 1fr !important;
+        gap: 1.25rem !important;
+    }
+
+    /* El panel de filtros pasa a ser una barra compacta */
+    .marketplace-layout .filters-panel {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.75rem 1.25rem;
+    }
+
+    .marketplace-layout .filters-panel h3 {
+        margin: 0;
+    }
+
+    .marketplace-layout .filters-panel > div {
+        flex: 1 1 220px;
+        margin: 0 !important;
+    }
+
+    .marketplace-layout .filters-panel select {
+        margin: 0;
+    }
+}
+
+@media (max-width: 720px) {
+    .container {
+        padding: 1.35rem 1rem;
+    }
+
+    h1 {
+        font-size: 1.38rem !important;
+        line-height: 1.25;
+    }
+
+    /* Evita el zoom automático de iOS al enfocar un campo */
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        min-height: 42px;
+    }
+
+    .offers-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1rem !important;
+    }
+
+    .search-bar-container {
+        margin-bottom: 1rem;
+    }
+
+    .offer-footer {
+        flex-wrap: wrap;
+        row-gap: 0.55rem;
+    }
+
+    .card-panel {
+        padding: 1.15rem;
+    }
+
+    .card-panel table {
+        min-width: 520px;
+    }
+
+    .bitacora-grid .card-panel table {
+        min-width: 560px;
+    }
+
+    th,
+    td {
+        padding: 0.6rem;
+        white-space: nowrap;
+    }
+
+    footer {
+        padding: 1.25rem 1rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .card-panel {
+        padding: 1rem;
+    }
+
+    .card-panel table {
+        min-width: 480px;
+    }
+
+    .bitacora-grid .card-panel table {
+        min-width: 520px;
+    }
+}
+
+/* --- Autenticación --- */
+@media (max-width: 720px) {
+    .auth-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .auth-tab {
+        padding: 0.65rem 0.4rem;
+        font-size: 0.9rem;
+    }
+
+    .auth-btn {
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 380px) {
+    .auth-container {
+        padding: 1.15rem;
+    }
+
+    .auth-tab {
+        font-size: 0.84rem;
+    }
+}
+
+/* --- Perfil --- */
+@media (max-width: 720px) {
+    .perfil-container {
+        margin: 1rem auto;
+        padding: 1.5rem;
+        border-radius: 10px;
+    }
+
+    .danger-zone {
+        margin-top: 2rem;
+        padding-top: 1.25rem;
+    }
+
+    .btn-danger {
+        width: 100%;
+        min-height: 42px;
+    }
+}
+
+@media (max-width: 380px) {
+    .perfil-container {
+        padding: 1.15rem;
+    }
+}
+
+/* --- Términos y privacidad --- */
+@media (max-width: 720px) {
+    .terms-container {
+        margin: 1rem auto;
+    }
+
+    .terms-header,
+    .terms-section {
+        padding: 1.25rem;
+        border-radius: 10px;
+    }
+
+    .terms-section h2 {
+        font-size: 1.2rem;
+        line-height: 1.3;
+    }
+
+    .terms-section h3 {
+        font-size: 0.95rem;
+    }
+
+    .terms-section p,
+    .terms-section li {
+        font-size: 0.92rem;
+        line-height: 1.65;
+    }
+}
+
+/* --- Preferencias de accesibilidad --- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
